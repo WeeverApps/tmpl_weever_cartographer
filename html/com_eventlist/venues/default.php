@@ -21,7 +21,7 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
-require_once(JPATH_BASE.DS.'templates'.DS.'weever_cartographerdetails'.DS.'simpledom'.DS.'simpledom.php');
+require_once(JPATH_THEMES . DS. 'weever_cartographer'.DS.'simpledom'.DS.'simpledom.php');
 jimport( 'joomla.environment.uri' );
 
 class R3SItemMap {
@@ -75,9 +75,8 @@ $feed->description = ""; //nothing yet
 $feed->name = $this->pagetitle;
 $feed->items = array();
 
-$feed->url = str_replace("?template=weever_cartographerdetails","",$feed->url);
-$feed->url = str_replace("template=weever_cartographerdetails","",$feed->url);
-
+$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
+$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
 
 foreach ($this->rows as $v)
 {
@@ -102,7 +101,7 @@ foreach ($this->rows as $v)
 	$feedItem->datetime["modified"] = null; // add later
 	$feedItem->image["mobile"] = JURI::root().'images/eventlist/venues/'.$v->locimage;
 	$feedItem->image["full"] = JURI::root().'images/eventlist/venues/'.$v->locimage;
-	$feedItem->url = JURI::root()."index.php?option=com_eventlist&view=venueevents&id=".$v->id."&template=weever_cartographerdetails";
+	$feedItem->url = JURI::root()."index.php?option=com_eventlist&view=venueevents&id=".$v->id."&template=weever_cartographer";
 	$feedItem->author = null;
 	$feedItem->publisher = $mainframe->getCfg('sitename');
 	
@@ -112,8 +111,7 @@ foreach ($this->rows as $v)
 }	
 
 $document =& JFactory::getDocument();
-$document->setMimeEncoding( 'application/json' );
-
+header('Content-type: application/json');		
 header('Cache-Control: no-cache, must-revalidate');
 
 $callback = JRequest::getVar('callback');		
@@ -123,7 +121,5 @@ $json = json_encode($feed);
 if($callback)
 	$json = $callback . "(". $json .")";
 
-
-// die() young
 print_r($json);
 jexit();
