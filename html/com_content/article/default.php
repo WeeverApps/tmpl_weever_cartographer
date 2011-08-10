@@ -1,23 +1,25 @@
 <?php
- /*
- *
- *	Cartographer Details R3S Template for Joomla
- *	(c) 2010-2011 Weever Inc. <http://www.weeverapps.com/>
- *
- *	 Author: 	Robert Gerald Porter (rob@weeverapps.com)
- *	 Version: 	0.9.2
- *   License: 	GPL v3.0
- *
- *   This extension is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This extension is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details <http://www.gnu.org/licenses/>.
- * 
+/*
+*
+*	Weever Cartographer R3S Output Template for Joomla
+*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*
+*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
+*	Version: 	0.9.2
+*   License: 	GPL v3.0
+*
+*   This extension is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   This extension is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details <http://www.gnu.org/licenses/>.
+* 
+*
+*
  * ORIGINAL COPYRIGHTS BELOW
  *
  *
@@ -31,6 +33,51 @@
 // no direct access
 defined('_JEXEC') or die;
 
+jimport( 'joomla.environment.uri' );
+require_once(JPATH_THEMES . DS. 'weever_cartographer'.DS.'simpledom'.DS.'simpledom.php');
+
+$document =& JFactory::getDocument();
+header('Content-type: application/json');		
+header('Cache-Control: no-cache, must-revalidate');
+
+$callback = JRequest::getVar('callback');
+
+// specs @ https://github.com/WeeverApps/r3s-spec
+
+class jsonOutput {
+
+	public $results;
+
+}
+
+class R3SHtmlContentDetailsMap {
+
+	public 		$html;
+	public 		$name;
+	public 		$datetime		= array("published"=>"","modified"=>"");
+	public 		$image			= array("mobile"=>"","full"=>"");
+	public 		$tags			= array();
+	public		$language;
+	public 		$url;
+	public 		$uuid;
+	public 		$author;
+	public 		$publisher;
+	public 		$generator		= "Weever Cartographer R3S Template for Joomla";
+	public 		$copyright;
+	public 		$rating;
+	public 		$r3sVersion		= "0.8";
+	public 		$license;
+	public 		$relationships;
+
+}
+
+$conf =& JFactory::getConfig();
+$lang =& JFactory::getLanguage();
+
+$jsonHtml = new R3SHtmlContentDetailsMap;
+
+$jsonHtml->language = $lang->_default;
+$jsonHtml->publisher = $conf->getValue('config.sitename');
 
 $version = new JVersion;
 $joomla = $version->getShortVersion();
@@ -39,15 +86,22 @@ $joomla = $version->getShortVersion();
 if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 {
 
+	$jsonHtml->name = $this->article->title;
 	
-	$canEdit	= ($this->user->authorize('com_content', 'edit', 'content', 'all') || $this->user->authorize('com_content', 'edit', 'content', 'own'));
+	$author =  $this->article->author;
+	$author = ($this->article->created_by_alias ? $this->article->created_by_alias : $author);
+	
+	$jsonHtml->author = $author;
+	$jsonHtml->datetime["published"] = $this->article->created;
+	$jsonHtml->datetime["modified"] = $this->article->modified;
+
 	?>
 	<?php if ($this->params->get('show_page_title', 1) && $this->params->get('page_title') != $this->article->title) : ?>
 		<div class="componentheading<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
 			<?php echo $this->escape($this->params->get('page_title')); ?>
 		</div>
 	<?php endif; ?>
-	<?php if ($canEdit || $this->params->get('show_title') || $this->params->get('show_pdf_icon') || $this->params->get('show_print_icon') || $this->params->get('show_email_icon')) : ?>
+	<?php if ($canEdit || $this->params->get('show_title')) : ?>
 	<table class="contentpaneopen<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
 	<tr>
 		<?php if ($this->params->get('show_title')) : ?>
@@ -60,34 +114,7 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 			<?php endif; ?>
 		</td>
 		<?php endif; ?>
-		<?php if (!$this->print) : ?>
-			<?php if ($this->params->get('show_pdf_icon')) : ?>
-			<td align="right" width="100%" class="buttonheading">
-			<?php echo JHTML::_('icon.pdf',  $this->article, $this->params, $this->access); ?>
-			</td>
-			<?php endif; ?>
-	
-			<?php if ( $this->params->get( 'show_print_icon' )) : ?>
-			<td align="right" width="100%" class="buttonheading">
-			<?php echo JHTML::_('icon.print_popup',  $this->article, $this->params, $this->access); ?>
-			</td>
-			<?php endif; ?>
-	
-			<?php if ($this->params->get('show_email_icon')) : ?>
-			<td align="right" width="100%" class="buttonheading">
-			<?php echo JHTML::_('icon.email',  $this->article, $this->params, $this->access); ?>
-			</td>
-			<?php endif; ?>
-			<?php if ($canEdit) : ?>
-			<td align="right" width="100%" class="buttonheading">
-				<?php echo JHTML::_('icon.edit', $this->article, $this->params, $this->access); ?>
-			</td>
-			<?php endif; ?>
-		<?php else : ?>
-			<td align="right" width="100%" class="buttonheading">
-			<?php echo JHTML::_('icon.print_screen',  $this->article, $this->params, $this->access); ?>
-			</td>
-		<?php endif; ?>
+		
 	</tr>
 	</table>
 	<?php endif; ?>
@@ -97,37 +124,6 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	endif; ?>
 	<?php echo $this->article->event->beforeDisplayContent; ?>
 	<table class="contentpaneopen<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
-	<?php if (($this->params->get('show_section') && $this->article->sectionid) || ($this->params->get('show_category') && $this->article->catid)) : ?>
-	<tr>
-		<td>
-			<?php if ($this->params->get('show_section') && $this->article->sectionid && isset($this->article->section)) : ?>
-			<span>
-				<?php if ($this->params->get('link_section')) : ?>
-					<?php echo '<a href="'.JRoute::_(ContentHelperRoute::getSectionRoute($this->article->sectionid)).'">'; ?>
-				<?php endif; ?>
-				<?php echo $this->escape($this->article->section); ?>
-				<?php if ($this->params->get('link_section')) : ?>
-					<?php echo '</a>'; ?>
-				<?php endif; ?>
-					<?php if ($this->params->get('show_category')) : ?>
-					<?php echo ' - '; ?>
-				<?php endif; ?>
-			</span>
-			<?php endif; ?>
-			<?php if ($this->params->get('show_category') && $this->article->catid) : ?>
-			<span>
-				<?php if ($this->params->get('link_category')) : ?>
-					<?php echo '<a href="'.JRoute::_(ContentHelperRoute::getCategoryRoute($this->article->catslug, $this->article->sectionid)).'">'; ?>
-				<?php endif; ?>
-				<?php echo $this->escape($this->article->category); ?>
-				<?php if ($this->params->get('link_category')) : ?>
-					<?php echo '</a>'; ?>
-				<?php endif; ?>
-			</span>
-			<?php endif; ?>
-		</td>
-	</tr>
-	<?php endif; ?>
 	<?php if (($this->params->get('show_author')) && ($this->article->author != "")) : ?>
 	<tr>
 		<td valign="top">
@@ -143,15 +139,6 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	<tr>
 		<td valign="top" class="createdate">
 			<?php echo JHTML::_('date', $this->article->created, JText::_('DATE_FORMAT_LC2')) ?>
-		</td>
-	</tr>
-	<?php endif; ?>
-	
-	<?php if ($this->params->get('show_url') && $this->article->urls) : ?>
-	<tr>
-		<td valign="top">
-			<a href="http://<?php echo $this->article->urls ; ?>" target="_blank">
-				<?php echo $this->escape($this->article->urls); ?></a>
 		</td>
 	</tr>
 	<?php endif; ?>
@@ -177,12 +164,67 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	<?php echo $this->article->event->afterDisplayContent; ?>
 
 	<?php	
+	
+	$jsonHtml->html = ob_get_clean();
+	
+	$jsonHtml->image = null;
+	
 
-	return;
+		$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
+		
+		foreach(@$html->find('img') as $vv)
+		{
+			if($vv->src)
+				$jsonHtml->image = JURI::root().$vv->src;
+		}
+		
+		if(!$v->image)
+			$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+
+	
+	// Mask external links so we leave only internal ones to play with.
+	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+	
+	// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
+	$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
+	$jsonHtml->html = str_replace("href=\"", "target=\"_blank\" href=\"".JURI::root(), $jsonHtml->html);
+	$jsonHtml->html = str_replace("src=\"/", "src=\"".JURI::root(), $jsonHtml->html);
+	$jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $jsonHtml->html);
+	
+	// Restore external links, ensure target="_blank" applies
+	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+	$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
+										"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
+	
+	$jsonOutput = new jsonOutput;
+	$jsonOutput->results[] = $jsonHtml;
+	$output = json_encode($jsonOutput);
+	
+	if($callback)
+		$json = $callback."(".$output.")";
+	else 
+		$json = $output;
+	
+	
+	print_r($json);
+	
+	jexit();
 
 }
 
 JHtml::addIncludePath(JPATH_COMPONENT.DS.'helpers');
+
+
+$jsonHtml->name = $this->item->title;
+
+$author =  $this->item->author;
+$author = ($this->item->created_by_alias ? $this->item->created_by_alias : $author);
+
+$jsonHtml->author = $author;
+$jsonHtml->datetime["published"] = $this->item->created;
+$jsonHtml->datetime["modified"] = $this->item->modified;
+
+
 
 // Create shortcuts to some parameters.
 $params		= $this->item->params;
@@ -304,3 +346,50 @@ endif; ?>
 <?php endif; ?>
 <?php echo $this->item->event->afterDisplayContent; ?>
 </div>
+
+
+<?php 
+
+$jsonHtml->html =  ob_get_clean();
+
+$jsonHtml->image = null;
+
+
+	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
+	
+	foreach(@$html->find('img') as $vv)
+	{
+		if($vv->src)
+			$jsonHtml->image = JURI::root().$vv->src;
+	}
+	
+	if(!$v->image)
+		$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+
+
+// Mask external links so we leave only internal ones to play with.
+$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+
+// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
+$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
+$jsonHtml->html = str_replace("href=\"", "target=\"_blank\" href=\"".JURI::root(), $jsonHtml->html);
+$jsonHtml->html = str_replace("src=\"/", "src=\"".JURI::root(), $jsonHtml->html);
+$jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $jsonHtml->html);
+
+// Restore external links, ensure target="_blank" applies
+$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
+									"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
+
+$jsonOutput = new jsonOutput;
+$jsonOutput->results[] = $jsonHtml;
+$output = json_encode($jsonOutput);
+
+if($callback)
+	$json = $callback."(".$output.")";
+else 
+	$json = $output;
+
+print_r($json);
+
+jexit();
