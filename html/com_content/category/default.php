@@ -19,20 +19,7 @@
 *   GNU General Public License for more details <http://www.gnu.org/licenses/>.
 * 
 *
-*  Original copyrights below this line
-*  ===================================
-*
-** @version		$Id: view.html.php 14401 2010-01-26 14:10:00Z louis $
- * @package		Joomla
- * @subpackage	Content
- * @copyright	Copyright (C) 2005 - 2010 Open Source Matters. All rights reserved.
- * @license		GNU/GPL, see LICENSE.php
- * Joomla! is free software. This version may have been modified pursuant to the
- * GNU General Public License, and as distributed it includes or is derivative
- * of works licensed under the GNU General Public License or other free or open
- * source software licenses. See COPYRIGHT.php for copyright notices and
- * details.
- */
+*/
  
 
 // Check to ensure this file is included in Joomla!
@@ -41,7 +28,7 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.environment.uri' );
 
-require_once('../../simpledom.php');
+require_once(JPATH_THEMES . DS. 'weever_cartographer'.DS.'simpledom'.DS.'simpledom.php');
 
 class R3SItemMap {
 
@@ -83,7 +70,7 @@ class R3SChannelMap {
 
 	
 		$mainframe = &JFactory::getApplication();
-
+		$lang =& JFactory::getLanguage();
 		
 		
 		$feed = new R3SChannelMap;
@@ -91,6 +78,7 @@ class R3SChannelMap {
 		$feed->count = count($items);
 		$feed->thisPage = 1;
 		$feed->lastPage = 1;
+		$feed->language = $lang;
 		$feed->sort = "normal";
 		$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
 		$feed->description = $this->category->description;
@@ -138,8 +126,7 @@ class R3SChannelMap {
 			 
 		// Set the MIME type for JSON output.
 		$document =& JFactory::getDocument();
-		$document->setMimeEncoding( 'application/json' );
-		
+		header('Content-type: application/json');				
 		header('Cache-Control: no-cache, must-revalidate');
 		
 		$callback = JRequest::getVar('callback');		

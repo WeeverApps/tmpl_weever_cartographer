@@ -83,7 +83,7 @@ class R3SChannelMap {
 
 	
 		$mainframe = &JFactory::getApplication();
-
+		$lang =& JFactory::getLanguage();
 		
 		
 		$feed = new R3SChannelMap;
@@ -91,6 +91,7 @@ class R3SChannelMap {
 		$feed->count = count($items);
 		$feed->thisPage = 1;
 		$feed->lastPage = 1;
+		$feed->language = $lang;
 		$feed->sort = "normal";
 		$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
 		$feed->description = $this->section->description;

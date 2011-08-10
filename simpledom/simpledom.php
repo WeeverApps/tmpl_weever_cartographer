@@ -32,7 +32,7 @@ Contributions by:
 Licensed under The MIT License
 Redistributions of files must retain the above copyright notice.
 *******************************************************************************/
-
+defined( '_JEXEC' ) or die( 'Restricted access' );
 
 define('HDOM_TYPE_ELEMENT', 1);
 define('HDOM_TYPE_COMMENT', 2);
