@@ -52,7 +52,7 @@ class R3SChannelMap {
 	public 		$count;
 	public 		$type			= "htmlContent";
 	public 		$sort;
-	public 		$language		= "en-GB"; // fill in Joomla lang
+	public 		$language		= "en-GB"; 
 	public 		$copyright;
 	public 		$license;
 	public 		$generator		= "Weever Cartographer R3S Output Template for Joomla 0.9.2";
@@ -70,9 +70,13 @@ class R3SChannelMap {
 
 		$lang =& JFactory::getLanguage();
         $mainframe = &JFactory::getApplication();
+       
+        // override K2's leading/primary/secondary/link lists
+        JRequest::setVar('limit', 15);
+        $items = $this->get('data');
         
         $feed = new R3SChannelMap;
-        $feed->count = count($this->leading) + count($this->primary) + count($this->secondary) + count($this->links);
+        $feed->count = count($items);
         $feed->thisPage = 1;
         $feed->lastPage = 1;
         $feed->language = $lang->_default;
@@ -86,32 +90,15 @@ class R3SChannelMap {
 		$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
 		        
 		        
-		foreach((array)$this->leading as $k=>$v)
+		foreach((array)$items as $k=>$v)
         {
         	include('category_item.php');           	
         }
         
-                
-        foreach((array)$this->primary as $k=>$v)
-        {
-        	include('category_item.php');       	
-        }
-        
-                
-        foreach((array)$this->secondary as $k=>$v)
-        {
-        	include('category_item.php');           	
-        }
-        
-                
-        foreach((array)$this->links as $k=>$v)
-        {
-        	include('category_item.php');         	
-        }
+
         
 		// Set the MIME type for JSON output.
 		$document =& JFactory::getDocument();
-		//$document->setMimeEncoding( 'application/json' );
 		header('Content-type: application/json');		
 		header('Cache-Control: no-cache, must-revalidate');
 		
