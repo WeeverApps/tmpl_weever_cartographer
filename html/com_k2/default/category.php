@@ -27,100 +27,51 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.environment.uri');
 
-require_once(JPATH_THEMES . DS. 'weever_cartographer'.DS.'simpledom'.DS.'simpledom.php');
-
-class R3SItemMap {
-
-	public 		$type;
-	public 		$description;
-	public 		$name;
-	public 		$datetime		= array("published"=>"","modified"=>"","start"=>"","end"=>"");
-	public 		$image			= array("mobile"=>"","full"=>"");
-	public 		$tags			= array();
-	public 		$url;
-	public 		$uuid;
-	public 		$author;
-	public 		$publisher;
-	public 		$relationships;
-
-}
-
-class R3SChannelMap {
-
-	public 		$thisPage;
-	public 		$lastPage;
-	public 		$count;
-	public 		$type			= "htmlContent";
-	public 		$sort;
-	public 		$language		= "en-GB"; // fill in Joomla lang
-	public 		$copyright;
-	public 		$license;
-	public 		$generator		= "Weever Cartographer R3S Output Template for Joomla 0.9.2";
-	public 		$publisher;
-	public 		$rating;
-	public 		$url;
-	public 		$description;
-	public 		$name;
-	public 		$r3sVersion		= "0.8";
-	public 		$relationships;
-	public 		$items;
-
-}
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
 
-		$lang =& JFactory::getLanguage();
-        $mainframe = &JFactory::getApplication();
-        
-        $feed = new R3SChannelMap;
-        $feed->count = count($this->leading) + count($this->primary) + count($this->secondary) + count($this->links);
-        $feed->thisPage = 1;
-        $feed->lastPage = 1;
-        $feed->language = $lang->_default;
-        $feed->sort = "normal";
-        $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
-        $feed->description = "test";
-        $feed->name = $this->category->name;
-        $feed->items = array();
-		        
-		$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
-		$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
-		        
-		        
-		foreach((array)$this->leading as $k=>$v)
-        {
-        	include('category_item.php');           	
-        }
-        
-                
-        foreach((array)$this->primary as $k=>$v)
-        {
-        	include('category_item.php');       	
-        }
-        
-                
-        foreach((array)$this->secondary as $k=>$v)
-        {
-        	include('category_item.php');           	
-        }
-        
-                
-        foreach((array)$this->links as $k=>$v)
-        {
-        	include('category_item.php');         	
-        }
-        
-		// Set the MIME type for JSON output.
-		$document =& JFactory::getDocument();
-		//$document->setMimeEncoding( 'application/json' );
-		header('Content-type: application/json');		
-		header('Cache-Control: no-cache, must-revalidate');
-		
-		$callback = JRequest::getVar('callback');		
 
-		$json = json_encode($feed);
-		
-		if($callback)
-			$json = $callback . "(". $json .")";
-		
-		print_r($json);
-		jexit();
+	$lang =& JFactory::getLanguage();
+    $mainframe = &JFactory::getApplication();
+   
+    // override K2's leading/primary/secondary/link lists
+    JRequest::setVar('limit', 15);
+    $items = $this->get('data');
+    
+    $feed = new R3SChannelMap;
+    $feed->count = count($items);
+    $feed->thisPage = 1;
+    $feed->lastPage = 1;
+    $feed->language = $lang->_default;
+    $feed->sort = "normal";
+    $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
+    $feed->description = "test";
+    $feed->name = $this->category->name;
+    $feed->items = array();
+	        
+	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
+	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
+	        
+	        
+	foreach((array)$items as $k=>$v)
+    {
+    	include('category_item.php');           	
+    }
+    
+
+    
+	// Set the MIME type for JSON output.
+	$document =& JFactory::getDocument();
+	header('Content-type: application/json');		
+	header('Cache-Control: no-cache, must-revalidate');
+	
+	$callback = JRequest::getVar('callback');		
+
+	$json = json_encode($feed);
+	
+	if($callback)
+		$json = $callback . "(". $json .")";
+	
+	print_r($json);
+	jexit();
