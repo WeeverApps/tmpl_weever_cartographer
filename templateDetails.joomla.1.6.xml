@@ -15,6 +15,7 @@
                 <folder>simpledom</folder>
                 <folder>html</folder>
                 <filename>templateDetails.xml</filename>
+                 <folder>classes</folder>
         </files>
         <positions />
 </extension>

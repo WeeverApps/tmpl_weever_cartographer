@@ -21,107 +21,71 @@
 
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' );
-require_once(JPATH_THEMES . DS. 'weever_cartographer'.DS.'simpledom'.DS.'simpledom.php');
 jimport( 'joomla.environment.uri' );
 
-class R3SItemMap {
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
-	public 		$type;
-	public 		$description;
-	public 		$name;
-	public 		$datetime		= array("published"=>"","modified"=>"","start"=>"","end"=>"");
-	public 		$image			= array("mobile"=>"","full"=>"");
-	public 		$tags			= array();
-	public 		$url;
-	public 		$uuid;
-	public 		$author;
-	public 		$publisher;
-	public 		$relationships;
-
-}
-
-class R3SChannelMap {
-
-	public 		$thisPage;
-	public 		$lastPage;
-	public 		$count;
-	public 		$type			= "htmlContent";
-	public 		$sort;
-	public 		$language		= "en-GB"; // fill in Joomla lang
-	public 		$copyright;
-	public 		$license;
-	public 		$generator		= "Cartographer-Content for Joomla 1.5 v0.8";
-	public 		$publisher;
-	public 		$rating;
-	public 		$url;
-	public 		$description;
-	public 		$name;
-	public 		$r3sVersion		= "0.8";
-	public 		$relationships;
-	public 		$items;
-
-}
-
-$mainframe = &JFactory::getApplication();
-
-$feed = new R3SChannelMap;
-
-$feed->count = count($this->rows);
-$feed->thisPage = 1;
-$feed->lastPage = null;
-$feed->sort = "normal";
-$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
-$feed->description = ""; //nothing yet
-$feed->name = $this->pagetitle;
-$feed->items = array();
-
-$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
-$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
-	 
-
-foreach ($this->rows as $v)
-{
-
-	$html = SimpleHTMLDomHelper::str_get_html($v->image);
-
-	foreach(@$html->find('img') as $vv)
+	$mainframe = &JFactory::getApplication();
+	
+	$feed = new R3SChannelMap;
+	
+	$feed->count = count($this->rows);
+	$feed->thisPage = 1;
+	$feed->lastPage = null;
+	$feed->sort = "normal";
+	$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
+	$feed->description = ""; //nothing yet
+	$feed->name = $this->pagetitle;
+	$feed->items = array();
+	
+	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
+	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
+		 
+	
+	foreach ($this->rows as $v)
 	{
-		if($vv->src)
-			$v->image = JURI::root().$vv->src;
-	}
-
-	if(!$v->image)
-		$v->image = JURI::root()."media/com_weever/icon_live.png";
 	
-	$feedItem = new R3SItemMap;
+		$html = SimpleHTMLDomHelper::str_get_html($v->image);
 	
-	$feedItem->type = "htmlContent";
-	$feedItem->description = $v->description;
-	$feedItem->name = $v->catname;
-	$feedItem->datetime["published"] = null;
-	$feedItem->datetime["modified"] = null; // add later
-	$feedItem->image["mobile"] = $v->image;
-	$feedItem->image["full"] = $v->image;
-	$feedItem->url = JURI::root()."index.php?option=com_eventlist&view=categoryevents&id=".$v->id."&template=weever_cartographer";
-	$feedItem->author = null;
-	$feedItem->publisher = $mainframe->getCfg('sitename');
+		foreach(@$html->find('img') as $vv)
+		{
+			if($vv->src)
+				$v->image = JURI::root().$vv->src;
+		}
 	
-	$feed->items[] = $feedItem;
-
-
-}	
-
-$document =& JFactory::getDocument();
-header('Content-type: application/json');		
-header('Cache-Control: no-cache, must-revalidate');
-
-$callback = JRequest::getVar('callback');		
-
-$json = json_encode($feed);
-
-if($callback)
-	$json = $callback . "(". $json .")";
-
-print_r($json);
-jexit();
-
+		if(!$v->image)
+			$v->image = JURI::root()."media/com_weever/icon_live.png";
+		
+		$feedItem = new R3SItemMap;
+		
+		$feedItem->type = "htmlContent";
+		$feedItem->description = $v->description;
+		$feedItem->name = $v->catname;
+		$feedItem->datetime["published"] = null;
+		$feedItem->datetime["modified"] = null; // add later
+		$feedItem->image["mobile"] = $v->image;
+		$feedItem->image["full"] = $v->image;
+		$feedItem->url = JURI::root()."index.php?option=com_eventlist&view=categoryevents&id=".$v->id."&template=weever_cartographer";
+		$feedItem->author = null;
+		$feedItem->publisher = $mainframe->getCfg('sitename');
+		
+		$feed->items[] = $feedItem;
+	
+	
+	}	
+	
+	$document =& JFactory::getDocument();
+	header('Content-type: application/json');		
+	header('Cache-Control: no-cache, must-revalidate');
+	
+	$callback = JRequest::getVar('callback');		
+	
+	$json = json_encode($feed);
+	
+	if($callback)
+		$json = $callback . "(". $json .")";
+	
+	print_r($json);
+	jexit();
+	
