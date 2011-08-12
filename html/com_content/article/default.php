@@ -34,7 +34,9 @@
 defined('_JEXEC') or die;
 
 jimport( 'joomla.environment.uri' );
-require_once(JPATH_THEMES . DS. 'weever_cartographer'.DS.'simpledom'.DS.'simpledom.php');
+
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
 $document =& JFactory::getDocument();
 header('Content-type: application/json');		
@@ -44,32 +46,7 @@ $callback = JRequest::getVar('callback');
 
 // specs @ https://github.com/WeeverApps/r3s-spec
 
-class jsonOutput {
 
-	public $results;
-
-}
-
-class R3SHtmlContentDetailsMap {
-
-	public 		$html;
-	public 		$name;
-	public 		$datetime		= array("published"=>"","modified"=>"");
-	public 		$image			= array("mobile"=>"","full"=>"");
-	public 		$tags			= array();
-	public		$language;
-	public 		$url;
-	public 		$uuid;
-	public 		$author;
-	public 		$publisher;
-	public 		$generator		= "Weever Cartographer R3S Template for Joomla";
-	public 		$copyright;
-	public 		$rating;
-	public 		$r3sVersion		= "0.8";
-	public 		$license;
-	public 		$relationships;
-
-}
 
 $conf =& JFactory::getConfig();
 $lang =& JFactory::getLanguage();
@@ -170,16 +147,16 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	$jsonHtml->image = null;
 	
 
-		$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
-		
-		foreach(@$html->find('img') as $vv)
-		{
-			if($vv->src)
-				$jsonHtml->image = JURI::root().$vv->src;
-		}
-		
-		if(!$v->image)
-			$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
+	
+	foreach(@$html->find('img') as $vv)
+	{
+		if($vv->src)
+			$jsonHtml->image = JURI::root().$vv->src;
+	}
+	
+	if(!$v->image)
+		$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
 
 	
 	// Mask external links so we leave only internal ones to play with.

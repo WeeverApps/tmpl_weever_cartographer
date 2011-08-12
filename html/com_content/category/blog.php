@@ -42,8 +42,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 		$items = $this->getItems();
 	else 
-		$items = $this->items;
-		
+		$items = $this->items;		
+	
 	$feed = new R3SChannelMap;
 	
 	$feed->count = count($items);
