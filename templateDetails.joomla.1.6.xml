@@ -12,6 +12,7 @@
         <description>Weever Cartographer R3S Template for Joomla</description>
         <files>
                 <filename>index.php</filename>
+                <filename>index.html</filename>
                 <folder>simpledom</folder>
                 <folder>html</folder>
                 <filename>templateDetails.xml</filename>
