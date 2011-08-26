@@ -2,7 +2,7 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.5/template-install.dtd">
 <install version="1.5" type="template" method="upgrade">
         <name>Weever_Cartographer</name>
-        <creationDate>2011-08-10</creationDate>
+        <creationDate>2011-08-24</creationDate>
         <author>Robert Gerald Porter</author>
         <authorEmail>rob@weeverapps.com</authorEmail>
         <authorUrl>http://www.weeverapps.com/</authorUrl>
@@ -12,6 +12,7 @@
         <description>Weever Cartographer R3S Template for Joomla</description>
         <files>
                 <filename>index.php</filename>
+                <filename>index.html</filename>
                 <filename>templateDetails.xml</filename>
                 <folder>html</folder>
                 <folder>simpledom</folder>
