@@ -34,7 +34,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 
 	$mainframe = &JFactory::getApplication();
 	$lang =& JFactory::getLanguage();
-	$items = $this->getItems();
+	$items = $this->items;
 	
 	$feed = new R3SChannelMap;
 	

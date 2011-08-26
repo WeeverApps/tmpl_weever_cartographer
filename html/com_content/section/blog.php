@@ -31,10 +31,18 @@ jimport( 'joomla.environment.uri' );
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
-
+	
 	$mainframe = &JFactory::getApplication();
 	$lang =& JFactory::getLanguage();
-	$items = $this->items;
+	
+	$version = new JVersion;
+	$joomla = $version->getShortVersion();
+	
+	
+	if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
+		$items = $this->items;
+	else 
+		$items = $this->items;		
 	
 	$feed = new R3SChannelMap;
 	
@@ -44,7 +52,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$feed->language = $lang->_default;
 	$feed->sort = "normal";
 	$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
-	$feed->description = "Home";
+	$feed->description = $this->category->description;
 	$feed->name = $this->params->get('page_title');
 	$feed->items = array();
 	
@@ -88,6 +96,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	}
 		 
 	// Set the MIME type for JSON output.
+	$document =& JFactory::getDocument();
 	header('Content-type: application/json');				
 	header('Cache-Control: no-cache, must-revalidate');
 	
