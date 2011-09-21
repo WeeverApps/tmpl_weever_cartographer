@@ -34,10 +34,28 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 
 	$lang =& JFactory::getLanguage();
     $mainframe = &JFactory::getApplication();
+    $model = &$this->getModel('itemlist');
+    $params = &JComponentHelper::getParams('com_k2');
+    
+    $id = JRequest::getInt('id');
+    JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'tables');
+    $category = &JTable::getInstance('K2Category', 'Table');
+    $category->load($id);
+
+    //Merge params
+    $cparams = new JParameter($category->params);
+    if ($cparams->get('inheritFrom')) {
+        $masterCategory = &JTable::getInstance('K2Category', 'Table');
+        $masterCategory->load($cparams->get('inheritFrom'));
+        $cparams = new JParameter($masterCategory->params);
+    }
+    $params->merge($cparams);
+    
+    $ordering = $params->get('catOrdering');
    
     // override K2's leading/primary/secondary/link lists
     JRequest::setVar('limit', 15);
-    $items = $this->get('data');
+    $items = $model->getData($ordering);
     
     $feed = new R3SChannelMap;
     $feed->count = count($items);
