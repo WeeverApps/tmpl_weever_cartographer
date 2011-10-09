@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.0.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 * 
 *
 */
- 
 
 $v->image = null;
 
@@ -58,6 +57,31 @@ $feedItem->author = $v->author->name;
 $feedItem->publisher = $mainframe->getCfg('sitename');
 $feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 $feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
+
+$extraFields = json_decode($v->extra_fields);
+
+
+if(JRequest::getVar("geotag") == "true") 
+{
+	foreach ((array)$extraFields as $key=>$extraField)
+	{
+	
+		if(strpos($extraField->value, ";"))
+		{
+			$values = explode(";",$extraField->value);
+			
+			foreach((array)$values as $kk=>$vv)
+			{
+				$feedItem->geo[$kk][$extraFieldsFields[$key]] = $vv;
+			}
+			
+		}
+		else 
+			$feedItem->geo[0][$extraFieldsFields[$key]] = $extraField->value;
+			
+	}
+}
+
 
 $feed->items[] = $feedItem;
 

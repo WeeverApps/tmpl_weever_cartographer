@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weever.ca/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.0.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -57,6 +57,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		<?php echo $this->item->event->K2BeforeDisplay; ?>
 	
 	
+		<?php if(JRequest::getVar("content_header") !== "false") : ?>
+	
 		<div class="itemHeader">
 	
 			<?php if($this->item->params->get('itemDateCreated')): ?>
@@ -96,6 +98,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			<?php endif; ?>
 	
 	  </div>
+	  
+	  <?php endif; ?>
 	
 	  <!-- Plugins: AfterDisplayTitle -->
 	  <?php echo $this->item->event->AfterDisplayTitle; ?>
@@ -159,8 +163,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 			<div class="clr"></div>
 	
+			<!-- remove to show extra fields -->
 		  <?php if($this->item->params->get('itemExtraFields') && count($this->item->extra_fields)): ?>
-		  <!-- Item extra fields -->
+		  <!-- Item extra fields
 		  <div class="itemExtraFields">
 		  	<h3><?php echo JText::_('Additional Info'); ?></h3>
 		  	<ul>
@@ -172,17 +177,21 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 				<?php endforeach; ?>
 				</ul>
 		    <div class="clr"></div>
-		  </div>
+		  </div>  -->
 		  <?php endif; ?>
 	
-			<?php if($this->item->params->get('itemDateModified') && intval($this->item->modified)!=0):?>
-			<!-- Item date modified -->
-			<?php if($this->item->created != $this->item->modified): ?>
-			<span class="itemDateModified">
-				<?php echo JText::_('Last modified on'); ?> <?php echo JHTML::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2')); ?>
-			</span>
-			<?php endif; ?>
-			<?php endif; ?>
+		  <?php if(JRequest::getVar("content_header") !== "false") : ?>
+		  
+				<?php if($this->item->params->get('itemDateModified') && intval($this->item->modified)!=0):?>
+				<!-- Item date modified -->
+				<?php if($this->item->created != $this->item->modified): ?>
+				<span class="itemDateModified">
+					<?php echo JText::_('Last modified on'); ?> <?php echo JHTML::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2')); ?>
+				</span>
+				<?php endif; ?>
+				<?php endif; ?>
+				
+		  <?php endif; ?>
 	
 		  <!-- Plugins: AfterDisplayContent -->
 		  <?php echo $this->item->event->AfterDisplayContent; ?>
@@ -313,6 +322,51 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
 	$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 										"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
+										
+	$jsonHtml->datetime["published"] = $this->item->created;
+	$jsonHtml->datetime["modified"] = $this->item->modified;
+	$jsonHtml->name = $this->item->title;
+	
+	if(empty($this->item->created_by_alias))
+		$jsonHtml->author = $this->item->author->name;
+	else 
+		$JsonHtml->author = $this->item->created_by_alias;
+					
+	$db = &JFactory::getDBO();					
+	$query = "SELECT * FROM #__k2_extra_fields_groups";
+	$db->setQuery($query);
+	$fields = $db->loadObjectList();
+	
+	$extraFieldsGroup = array();
+	
+	foreach((array)$fields as $k=>$v)
+	{
+		$extraFieldsGroup[$v->id] = $v->name;
+	}
+	
+	//$jsonHtml->geo = array(0);
+	
+	foreach ((array)$this->item->extra_fields as $key=>$extraField)
+	{
+	
+		if($extraFieldsGroup[$extraField->group] == "geo")
+		{
+			if(strpos($extraField->value, ";"))
+			{
+				$values = explode(";",$extraField->value);
+				
+				foreach((array)$values as $kk=>$vv)
+				{
+					$jsonHtml->geo[$kk][$extraField->name] = $vv;
+				}
+				
+			}
+			else 
+				$jsonHtml->geo[0][$extraField->name] = $extraField->value;
+		}
+		else
+			$jsonHtml->relationships[$extraFieldsGroup[$extraField->group]][$extraField->name] = $extraField->value;
+	}	
 	
 	$callback = JRequest::getVar('callback');
 	

@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.0.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ class R3SHtmlContentDetailsMap {
 	public 		$datetime		= array("published"=>"","modified"=>"");
 	public 		$image			= array("mobile"=>"","full"=>"");
 	public 		$tags			= array();
+	public		$geo			= array();
 	public		$language;
 	public 		$url;
 	public 		$uuid;
@@ -37,7 +38,7 @@ class R3SHtmlContentDetailsMap {
 	public 		$generator		= "Weever Cartographer R3S Template for Joomla";
 	public 		$copyright;
 	public 		$rating;
-	public 		$r3sVersion		= "0.8";
+	public 		$r3sVersion		= "0.8.1";
 	public 		$license;
 	public 		$relationships;
 
@@ -51,6 +52,7 @@ class R3SItemMap {
 	public 		$datetime		= array("published"=>"","modified"=>"","start"=>"","end"=>"");
 	public 		$image			= array("mobile"=>"","full"=>"");
 	public 		$tags			= array();
+	public		$geo			= array();
 	public 		$url;
 	public 		$uuid;
 	public 		$author;
@@ -74,11 +76,31 @@ class R3SChannelMap {
 	public 		$rating;
 	public 		$url;
 	public 		$description;
+	public		$geo			= array();
 	public 		$name;
-	public 		$r3sVersion		= "0.8";
+	public 		$r3sVersion		= "0.8.1";
 	public 		$relationships;
 	public 		$items;
 
+}
+
+class geoLocationalRelation {
+
+	public 		$longitude;
+	public		$latitude;
+	public		$altitude;
+	public		$address;
+	
+	public function __construct($lat, $long, $alt, $add) 
+	{
+	
+		$this->longitude = $long;
+		$this->latitude = $lat;
+		$this->altitude = $alt;
+		$this->address = $add;
+	
+	}
+	
 }
 
 class jsonOutput {

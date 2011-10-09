@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.0.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -52,6 +52,23 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $params->merge($cparams);
     
     $ordering = $params->get('catOrdering');
+    
+    if(JRequest::getVar("geotag") == "true") 
+    {
+	    $db = &JFactory::getDBO();					
+	    $query = "SELECT * FROM #__k2_extra_fields_groups";
+	    $db->setQuery($query);
+	    $results = $db->loadObjectList();
+	    
+	    $extraFieldsGroup = array();
+	    
+	    foreach((array)$results as $k=>$v)
+	    {
+	    	$extraFieldsGroup[$v->id] = $v->name;
+	    }
+	    
+	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label");
+    }
    
     // override K2's leading/primary/secondary/link lists
     JRequest::setVar('limit', 15);
@@ -62,7 +79,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $feed->thisPage = 1;
     $feed->lastPage = 1;
     $feed->language = $lang->_default;
-    $feed->sort = "normal";
+    $feed->sort = $ordering;
     $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
     $feed->description = "test";
     $feed->name = $this->category->name;
@@ -76,8 +93,6 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     {
     	include('category_item.php');           	
     }
-    
-
     
 	// Set the MIME type for JSON output.
 	$document =& JFactory::getDocument();
