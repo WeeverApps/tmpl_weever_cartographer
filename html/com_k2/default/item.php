@@ -51,10 +51,10 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	<div id="k2Container" class="itemView<?php echo ($this->item->featured) ? ' itemIsFeatured' : ''; ?><?php if($this->item->params->get('pageclass_sfx')) echo ' '.$this->item->params->get('pageclass_sfx'); ?>">
 	
 		<!-- Plugins: BeforeDisplay -->
-		<?php echo $this->item->event->BeforeDisplay; ?>
+		<?php //echo $this->item->event->BeforeDisplay; ?>
 	
 		<!-- K2 Plugins: K2BeforeDisplay -->
-		<?php echo $this->item->event->K2BeforeDisplay; ?>
+		<?php //echo $this->item->event->K2BeforeDisplay; ?>
 	
 	
 		<?php if(JRequest::getVar("content_header") !== "false") : ?>
@@ -102,18 +102,18 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	  <?php endif; ?>
 	
 	  <!-- Plugins: AfterDisplayTitle -->
-	  <?php echo $this->item->event->AfterDisplayTitle; ?>
+	  <?php //echo $this->item->event->AfterDisplayTitle; ?>
 	
 	  <!-- K2 Plugins: K2AfterDisplayTitle -->
-	  <?php echo $this->item->event->K2AfterDisplayTitle; ?>
+	  <?php //echo $this->item->event->K2AfterDisplayTitle; ?>
 	
 	  <div class="itemBody">
 	
 		  <!-- Plugins: BeforeDisplayContent -->
-		  <?php echo $this->item->event->BeforeDisplayContent; ?>
+		  <?php //echo $this->item->event->BeforeDisplayContent; ?>
 	
 		  <!-- K2 Plugins: K2BeforeDisplayContent -->
-		  <?php echo $this->item->event->K2BeforeDisplayContent; ?>
+		  <?php //echo $this->item->event->K2BeforeDisplayContent; ?>
 	
 		  <?php if($this->item->params->get('itemImage') && !empty($this->item->image)): ?>
 		  <!-- Item Image -->
@@ -194,10 +194,10 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		  <?php endif; ?>
 	
 		  <!-- Plugins: AfterDisplayContent -->
-		  <?php echo $this->item->event->AfterDisplayContent; ?>
+		  <?php //echo $this->item->event->AfterDisplayContent; ?>
 	
 		  <!-- K2 Plugins: K2AfterDisplayContent -->
-		  <?php echo $this->item->event->K2AfterDisplayContent; ?>
+		  <?php //echo $this->item->event->K2AfterDisplayContent; ?>
 	
 		  <div class="clr"></div>
 	  </div>
@@ -270,10 +270,10 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	
 	  <!-- Plugins: AfterDisplay -->
-	  <?php echo $this->item->event->AfterDisplay; ?>
+	  <?php //echo $this->item->event->AfterDisplay; ?>
 	
 	  <!-- K2 Plugins: K2AfterDisplay -->
-	  <?php echo $this->item->event->K2AfterDisplay; ?>
+	  <?php //echo $this->item->event->K2AfterDisplay; ?>
 	
 		<div class="clr"></div>
 	</div>
@@ -331,6 +331,17 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$jsonHtml->author = $this->item->author->name;
 	else 
 		$JsonHtml->author = $this->item->created_by_alias;
+		
+	if(count($this->item->tags))
+	{
+	
+		foreach ($this->item->tags as $key=>$tag)
+		{
+			$jsonHtml->tags[$key]["name"] = $tag->name;
+			$jsonHtml->tags[$key]["link"] = JURI::root().$tag->link;
+		}
+	
+	}
 					
 	$db = &JFactory::getDBO();					
 	$query = "SELECT * FROM #__k2_extra_fields_groups";

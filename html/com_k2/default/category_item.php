@@ -58,6 +58,17 @@ $feedItem->publisher = $mainframe->getCfg('sitename');
 $feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 $feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
 
+if(count($v->tags))
+{
+
+	foreach ($v->tags as $key=>$tag)
+	{
+		$feedItem->tags[$key]["name"] = $tag->name;
+		$feedItem->tags[$key]["link"] = JURI::root().$tag->link;
+	}
+
+}
+
 $extraFields = json_decode($v->extra_fields);
 
 

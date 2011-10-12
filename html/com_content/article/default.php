@@ -21,15 +21,15 @@
 *
 *
 *
- * ORIGINAL COPYRIGHTS BELOW
- *
- *
- * @version		$Id: default.php 20817 2011-02-21 21:48:16Z dextercowley $
- * @package		Joomla.Site
- * @subpackage	com_content
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+* ORIGINAL COPYRIGHTS BELOW
+*
+*
+* @version		$Id: default.php 20817 2011-02-21 21:48:16Z dextercowley $
+* @package		Joomla.Site
+* @subpackage	com_content
+* @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+* @license		GNU General Public License version 2 or later; see LICENSE.txt
+*/
 
 // no direct access
 defined('_JEXEC') or die;
@@ -98,9 +98,9 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	<?php endif; ?>
 	
 	<?php  if (!$this->params->get('show_intro')) :
-		echo $this->article->event->afterDisplayTitle;
+		echo // $this->article->event->afterDisplayTitle;
 	endif; ?>
-	<?php echo $this->article->event->beforeDisplayContent; ?>
+	<?php // echo $this->article->event->beforeDisplayContent; ?>
 	<table class="contentpaneopen<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
 	<?php if (($this->params->get('show_author')) && ($this->article->author != "")) : ?>
 	<tr>
@@ -139,7 +139,7 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	<?php endif; ?>
 	</table>
 	<span class="article_separator">&nbsp;</span>
-	<?php echo $this->article->event->afterDisplayContent; ?>
+	<?php //echo $this->article->event->afterDisplayContent; ?>
 
 	<?php	
 	
@@ -216,10 +216,10 @@ $user		= JFactory::getUser();
 </h1>
 
 <?php  if (!$params->get('show_intro')) :
-	echo $this->item->event->afterDisplayTitle;
+	//echo $this->item->event->afterDisplayTitle;
 endif; ?>
 
-<?php echo $this->item->event->beforeDisplayContent; ?>
+<?php //echo $this->item->event->beforeDisplayContent; ?>
 
 <?php $useDefList = (($params->get('show_author')) OR ($params->get('show_category')) OR ($params->get('show_parent_category'))
 	OR ($params->get('show_create_date')) OR ($params->get('show_modify_date')) OR ($params->get('show_publish_date'))
@@ -322,7 +322,7 @@ endif; ?>
 		</p>
 	<?php endif; ?>
 <?php endif; ?>
-<?php echo $this->item->event->afterDisplayContent; ?>
+<?php //echo $this->item->event->afterDisplayContent; ?>
 </div>
 
 
