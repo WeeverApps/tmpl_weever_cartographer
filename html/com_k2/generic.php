@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.0.1
+*	Version: 	1.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -37,21 +37,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $model = &$this->getModel('itemlist');
     $params = &JComponentHelper::getParams('com_k2');
     
-    $id = JRequest::getInt('id');
-    JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'tables');
-    $category = &JTable::getInstance('K2Category', 'Table');
-    $category->load($id);
-
-    //Merge params
-    $cparams = new JParameter($category->params);
-    if ($cparams->get('inheritFrom')) {
-        $masterCategory = &JTable::getInstance('K2Category', 'Table');
-        $masterCategory->load($cparams->get('inheritFrom'));
-        $cparams = new JParameter($masterCategory->params);
-    }
-    $params->merge($cparams);
-    
-    $ordering = $params->get('catOrdering');
+    $ordering = $params->get('tagOrdering');
     
     if(JRequest::getVar("geotag") == "true") 
     {
@@ -82,7 +68,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $feed->sort = $ordering;
     $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
     $feed->description = "test";
-    $feed->name = $this->category->name;
+    $feed->name = "Content tagged \"".JRequest::getVar("tag")."\"";
     $feed->items = array();
 	        
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
@@ -91,7 +77,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	        
 	foreach((array)$items as $k=>$v)
     {
-    	include('category_item.php');           	
+    	include('default/category_item.php');           	
     }
     
 	// Set the MIME type for JSON output.
