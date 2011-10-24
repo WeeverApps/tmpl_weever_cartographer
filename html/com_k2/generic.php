@@ -39,6 +39,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $ordering = $params->get('tagOrdering');
     
+    // override K2's leading/primary/secondary/link lists
+    JRequest::setVar('limit', 15);
+    
     if(JRequest::getVar("geotag") == "true") 
     {
 	    $db = &JFactory::getDBO();					
@@ -54,10 +57,11 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	    }
 	    
 	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
+	    
+	     JRequest::setVar('limit', 75);
     }
    
-    // override K2's leading/primary/secondary/link lists
-    JRequest::setVar('limit', 15);
+    
     $items = $model->getData($ordering);
     
     $feed = new R3SChannelMap;

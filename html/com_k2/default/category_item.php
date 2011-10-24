@@ -83,7 +83,7 @@ if(JRequest::getVar("geotag") == "true")
 			
 			foreach((array)$values as $kk=>$vv)
 			{
-				$feedItem->geo[$kk][$extraFieldsFields[$key]] = $vv;
+				$feedItem->geo[$kk][$extraFieldsFields[$key]] = trim($vv, "\r\n");
 			}
 			
 		}
