@@ -97,9 +97,9 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	</table>
 	<?php endif; ?>
 	
-	<?php  if (!$this->params->get('show_intro')) :
+	<?php /*if (!$this->params->get('show_intro')) :
 		echo // $this->article->event->afterDisplayTitle;
-	endif; ?>
+	endif;*/ ?>
 	<?php // echo $this->article->event->beforeDisplayContent; ?>
 	<table class="contentpaneopen<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
 	<?php if (($this->params->get('show_author')) && ($this->article->author != "")) : ?>

@@ -2,7 +2,7 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 1.6//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.6/template-install.dtd">
 <extension version="1.6" type="template" method="upgrade">
         <name>Weever_Cartographer</name>
-        <creationDate>2011-10-22</creationDate>
+        <creationDate>2011-11-01</creationDate>
         <author>Robert Gerald Porter</author>
         <authorEmail>rob@weeverapps.com</authorEmail>
         <authorUrl>http://www.weeverapps.com/</authorUrl>
