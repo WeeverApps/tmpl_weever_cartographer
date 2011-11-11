@@ -300,7 +300,12 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		foreach(@$html->find('img') as $vv)
 		{
 			if($vv->src)
-				$jsonHtml->image = JURI::root().$vv->src;
+			{
+				if(strstr($vv->src, "http://"))
+					$jsonHtml->image = $vv->src;
+				else
+					$jsonHtml->image = JURI::root().$vv->src;
+			}
 		}
 		
 		if(!$v->image)
