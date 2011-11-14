@@ -83,6 +83,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     if(!$category->image)
     	$category->image = JURI::root()."media/com_weever/icon_live.png";
+    else 
+    	$category->image = JURI::root()."media/k2/categories/".$category->image;
     
     $feed = new R3SChannelMap;
     $feed->count = count($items);

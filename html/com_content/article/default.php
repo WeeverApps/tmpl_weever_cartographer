@@ -45,10 +45,6 @@ header('Cache-Control: no-cache, must-revalidate');
 
 $callback = JRequest::getVar('callback');
 
-// specs @ https://github.com/WeeverApps/r3s-spec
-
-
-
 $conf =& JFactory::getConfig();
 $lang =& JFactory::getLanguage();
 

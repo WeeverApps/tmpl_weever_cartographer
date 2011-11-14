@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.0.1
+*	Version: 	1.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -35,6 +35,11 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$lang =& JFactory::getLanguage();
 	$items = $this->items;
 	
+	if(!$this->category->image)
+		$this->category->image = JURI::root()."media/com_weever/icon_live.png";
+	else 
+		$this->category->image = JURI::root()."images/stories/".$this->category->image;	
+	
 	$feed = new R3SChannelMap;
 	
 	$feed->count = count($items);
@@ -44,6 +49,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$feed->sort = "normal";
 	$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
 	$feed->description = $this->category->description;
+	$feed->image["mobile"] = $this->category->image;
+	$feed->image["full"] = $this->category->image;
 	$feed->name = $this->params->get('page_title');
 	$feed->items = array();
 	
