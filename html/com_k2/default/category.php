@@ -81,6 +81,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $items = $model->getData($ordering);
     
+    if(!$category->image)
+    	$category->image = JURI::root()."media/com_weever/icon_live.png";
+    
     $feed = new R3SChannelMap;
     $feed->count = count($items);
     $feed->thisPage = 1;
@@ -89,9 +92,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $feed->sort = $ordering;
     $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
     $feed->description = "test";
-    $feed->name = $this->category->name;
-    $feed->image["mobile"] = $this->category->image;
-    $feed->image["full"] = $this->category->image;
+    $feed->name = $category->name;
+    $feed->image["mobile"] = $category->image;
+    $feed->image["full"] = $category->image;
     $feed->items = array();
 	        
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);

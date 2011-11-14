@@ -72,6 +72,7 @@ class R3SChannelMap {
 	public 		$copyright;
 	public 		$license;
 	public 		$generator		= "Weever Cartographer R3S Template for Joomla";
+	public 		$image			= array("mobile"=>"","full"=>"");
 	public 		$publisher;
 	public 		$rating;
 	public 		$url;
