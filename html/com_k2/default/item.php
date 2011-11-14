@@ -287,11 +287,11 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$jsonHtml->id = $this->item->id;
 	
 	
-	$jsonHtml->image = null;
+	$jsonHtml->image["mobile"] = null;
 	
 	if(JFile::exists(JPATH_SITE.DS.'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5("Image".$jsonHtml->id).'_S.jpg'))
 	{
-		$jsonHtml->image = JURI::root().'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5('Image'.$jsonHtml->id)."_S.jpg";
+		$jsonHtml->image["mobile"] = JURI::root().'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5('Image'.$jsonHtml->id)."_S.jpg";
 	}	
 	else
 	{
@@ -302,14 +302,14 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			if($vv->src)
 			{
 				if(strstr($vv->src, "http://"))
-					$jsonHtml->image = $vv->src;
+					$jsonHtml->image["mobile"] = $vv->src;
 				else
-					$jsonHtml->image = JURI::root().$vv->src;
+					$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 			}
 		}
 		
-		if(!$v->image)
-			$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+		if(!$jsonHtml->image["mobile"])
+			$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 	}
 	
 	

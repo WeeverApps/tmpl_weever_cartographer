@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.1.0.1
+*	Version: 	1.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -90,6 +90,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
     $feed->description = "test";
     $feed->name = $this->category->name;
+    $feed->image["mobile"] = $this->category->image;
+    $feed->image["full"] = $this->category->image;
     $feed->items = array();
 	        
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);

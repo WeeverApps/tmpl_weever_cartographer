@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.0.1
+*	Version: 	1.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -145,7 +145,7 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	
 	$jsonHtml->html = ob_get_clean();
 	
-	$jsonHtml->image = null;
+	$jsonHtml->image["mobile"] = null;
 	
 
 	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
@@ -153,11 +153,11 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	foreach(@$html->find('img') as $vv)
 	{
 		if($vv->src)
-			$jsonHtml->image = JURI::root().$vv->src;
+			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
 	
-	if(!$v->image)
-		$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+	if(!$jsonHtml->image["mobile"])
+		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 
 	
 	// Mask external links so we leave only internal ones to play with.
@@ -330,7 +330,7 @@ endif; ?>
 
 $jsonHtml->html =  ob_get_clean();
 
-$jsonHtml->image = null;
+$jsonHtml->image["mobile"] = null;
 
 
 	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
@@ -338,11 +338,11 @@ $jsonHtml->image = null;
 	foreach(@$html->find('img') as $vv)
 	{
 		if($vv->src)
-			$jsonHtml->image = JURI::root().$vv->src;
+			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
 	
-	if(!$v->image)
-		$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+	if(!$v->imagee["mobile"])
+		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 
 
 // Mask external links so we leave only internal ones to play with.
