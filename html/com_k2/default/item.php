@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weever.ca/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.2.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -51,11 +51,13 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	<div id="k2Container" class="itemView<?php echo ($this->item->featured) ? ' itemIsFeatured' : ''; ?><?php if($this->item->params->get('pageclass_sfx')) echo ' '.$this->item->params->get('pageclass_sfx'); ?>">
 	
 		<!-- Plugins: BeforeDisplay -->
-		<?php echo $this->item->event->BeforeDisplay; ?>
+		<?php //echo $this->item->event->BeforeDisplay; ?>
 	
 		<!-- K2 Plugins: K2BeforeDisplay -->
-		<?php echo $this->item->event->K2BeforeDisplay; ?>
+		<?php //echo $this->item->event->K2BeforeDisplay; ?>
 	
+	
+		<?php if(JRequest::getVar("content_header") !== "false") : ?>
 	
 		<div class="itemHeader">
 	
@@ -96,20 +98,22 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			<?php endif; ?>
 	
 	  </div>
+	  
+	  <?php endif; ?>
 	
 	  <!-- Plugins: AfterDisplayTitle -->
-	  <?php echo $this->item->event->AfterDisplayTitle; ?>
+	  <?php //echo $this->item->event->AfterDisplayTitle; ?>
 	
 	  <!-- K2 Plugins: K2AfterDisplayTitle -->
-	  <?php echo $this->item->event->K2AfterDisplayTitle; ?>
+	  <?php //echo $this->item->event->K2AfterDisplayTitle; ?>
 	
 	  <div class="itemBody">
 	
 		  <!-- Plugins: BeforeDisplayContent -->
-		  <?php echo $this->item->event->BeforeDisplayContent; ?>
+		  <?php //echo $this->item->event->BeforeDisplayContent; ?>
 	
 		  <!-- K2 Plugins: K2BeforeDisplayContent -->
-		  <?php echo $this->item->event->K2BeforeDisplayContent; ?>
+		  <?php //echo $this->item->event->K2BeforeDisplayContent; ?>
 	
 		  <?php if($this->item->params->get('itemImage') && !empty($this->item->image)): ?>
 		  <!-- Item Image -->
@@ -159,8 +163,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 			<div class="clr"></div>
 	
+			<!-- remove to show extra fields -->
 		  <?php if($this->item->params->get('itemExtraFields') && count($this->item->extra_fields)): ?>
-		  <!-- Item extra fields -->
+		  <!-- Item extra fields
 		  <div class="itemExtraFields">
 		  	<h3><?php echo JText::_('Additional Info'); ?></h3>
 		  	<ul>
@@ -172,23 +177,27 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 				<?php endforeach; ?>
 				</ul>
 		    <div class="clr"></div>
-		  </div>
+		  </div>  -->
 		  <?php endif; ?>
 	
-			<?php if($this->item->params->get('itemDateModified') && intval($this->item->modified)!=0):?>
-			<!-- Item date modified -->
-			<?php if($this->item->created != $this->item->modified): ?>
-			<span class="itemDateModified">
-				<?php echo JText::_('Last modified on'); ?> <?php echo JHTML::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2')); ?>
-			</span>
-			<?php endif; ?>
-			<?php endif; ?>
+		  <?php if(JRequest::getVar("content_header") !== "false") : ?>
+		  
+				<?php if($this->item->params->get('itemDateModified') && intval($this->item->modified)!=0):?>
+				<!-- Item date modified -->
+				<?php if($this->item->created != $this->item->modified): ?>
+				<span class="itemDateModified">
+					<?php echo JText::_('Last modified on'); ?> <?php echo JHTML::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2')); ?>
+				</span>
+				<?php endif; ?>
+				<?php endif; ?>
+				
+		  <?php endif; ?>
 	
 		  <!-- Plugins: AfterDisplayContent -->
-		  <?php echo $this->item->event->AfterDisplayContent; ?>
+		  <?php //echo $this->item->event->AfterDisplayContent; ?>
 	
 		  <!-- K2 Plugins: K2AfterDisplayContent -->
-		  <?php echo $this->item->event->K2AfterDisplayContent; ?>
+		  <?php //echo $this->item->event->K2AfterDisplayContent; ?>
 	
 		  <div class="clr"></div>
 	  </div>
@@ -261,10 +270,10 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	
 	  <!-- Plugins: AfterDisplay -->
-	  <?php echo $this->item->event->AfterDisplay; ?>
+	  <?php //echo $this->item->event->AfterDisplay; ?>
 	
 	  <!-- K2 Plugins: K2AfterDisplay -->
-	  <?php echo $this->item->event->K2AfterDisplay; ?>
+	  <?php //echo $this->item->event->K2AfterDisplay; ?>
 	
 		<div class="clr"></div>
 	</div>
@@ -278,11 +287,11 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$jsonHtml->id = $this->item->id;
 	
 	
-	$jsonHtml->image = null;
+	$jsonHtml->image["mobile"] = null;
 	
 	if(JFile::exists(JPATH_SITE.DS.'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5("Image".$jsonHtml->id).'_S.jpg'))
 	{
-		$jsonHtml->image = JURI::root().'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5('Image'.$jsonHtml->id)."_S.jpg";
+		$jsonHtml->image["mobile"] = JURI::root().'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5('Image'.$jsonHtml->id)."_S.jpg";
 	}	
 	else
 	{
@@ -291,17 +300,31 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		foreach(@$html->find('img') as $vv)
 		{
 			if($vv->src)
-				$jsonHtml->image = JURI::root().$vv->src;
+			{
+				if(strstr($vv->src, "http://"))
+					$jsonHtml->image["mobile"] = $vv->src;
+				else
+					$jsonHtml->image["mobile"] = JURI::root().$vv->src;
+			}
 		}
 		
-		if(!$v->image)
-			$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+		if(!$jsonHtml->image["mobile"])
+			$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 	}
 	
 	
 	
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+	
+	// Mask telephone links
+	$jsonHtml->html = str_replace("href=\"tel:", "hrefmask=\"weevertel:", $jsonHtml->html);
+	
+	// Mask email links
+	$jsonHtml->html = str_replace("href=\"mailto:", "hrefmask=\"weevermail:", $jsonHtml->html);
+	
+	// Mask sms links
+	$jsonHtml->html = str_replace("href=\"sms:", "hrefmask=\"weeversms:", $jsonHtml->html);
 	
 	// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 	$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
@@ -311,8 +334,68 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	// Restore external links, ensure target="_blank" applies
 	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevertel:", "href=\"tel:", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevermail:", "href=\"mailto:", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weeversms:", "href=\"sms:", $jsonHtml->html);
+
 	$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 										"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
+										
+	$jsonHtml->datetime["published"] = $this->item->created;
+	$jsonHtml->datetime["modified"] = $this->item->modified;
+	$jsonHtml->name = $this->item->title;
+	
+	if(empty($this->item->created_by_alias))
+		$jsonHtml->author = $this->item->author->name;
+	else 
+		$JsonHtml->author = $this->item->created_by_alias;
+		
+	if(count($this->item->tags))
+	{
+	
+		foreach ($this->item->tags as $key=>$tag)
+		{
+			$jsonHtml->tags[$key]["name"] = $tag->name;
+			$jsonHtml->tags[$key]["link"] = JURI::root().$tag->link;
+		}
+	
+	}
+					
+	$db = &JFactory::getDBO();					
+	$query = "SELECT * FROM #__k2_extra_fields_groups";
+	$db->setQuery($query);
+	$fields = $db->loadObjectList();
+	
+	$extraFieldsGroup = array();
+	
+	foreach((array)$fields as $k=>$v)
+	{
+		$extraFieldsGroup[$v->id] = $v->name;
+	}
+	
+	//$jsonHtml->geo = array(0);
+	
+	foreach ((array)$this->item->extra_fields as $key=>$extraField)
+	{
+	
+		if($extraFieldsGroup[$extraField->group] == "geo")
+		{
+			if(strpos($extraField->value, ";"))
+			{
+				$values = explode(";",$extraField->value);
+				
+				foreach((array)$values as $kk=>$vv)
+				{
+					$jsonHtml->geo[$kk][$extraField->name] = $vv;
+				}
+				
+			}
+			else 
+				$jsonHtml->geo[0][$extraField->name] = $extraField->value;
+		}
+		else
+			$jsonHtml->relationships[$extraFieldsGroup[$extraField->group]][$extraField->name] = $extraField->value;
+	}	
 	
 	$callback = JRequest::getVar('callback');
 	
