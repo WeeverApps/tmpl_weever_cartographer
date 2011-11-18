@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.2.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -20,15 +20,16 @@
 * 
 *
 *
- * ORIGINAL COPYRIGHTS BELOW
- *
- *
- * @version		$Id: default.php 20817 2011-02-21 21:48:16Z dextercowley $
- * @package		Joomla.Site
- * @subpackage	com_content
- * @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- */
+*
+* ORIGINAL COPYRIGHTS BELOW
+*
+*
+* @version		$Id: default.php 20817 2011-02-21 21:48:16Z dextercowley $
+* @package		Joomla.Site
+* @subpackage	com_content
+* @copyright	Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+* @license		GNU General Public License version 2 or later; see LICENSE.txt
+*/
 
 // no direct access
 defined('_JEXEC') or die;
@@ -43,10 +44,6 @@ header('Content-type: application/json');
 header('Cache-Control: no-cache, must-revalidate');
 
 $callback = JRequest::getVar('callback');
-
-// specs @ https://github.com/WeeverApps/r3s-spec
-
-
 
 $conf =& JFactory::getConfig();
 $lang =& JFactory::getLanguage();
@@ -96,10 +93,10 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	</table>
 	<?php endif; ?>
 	
-	<?php  if (!$this->params->get('show_intro')) :
-		echo $this->article->event->afterDisplayTitle;
-	endif; ?>
-	<?php echo $this->article->event->beforeDisplayContent; ?>
+	<?php /*if (!$this->params->get('show_intro')) :
+		echo // $this->article->event->afterDisplayTitle;
+	endif;*/ ?>
+	<?php // echo $this->article->event->beforeDisplayContent; ?>
 	<table class="contentpaneopen<?php echo $this->escape($this->params->get('pageclass_sfx')); ?>">
 	<?php if (($this->params->get('show_author')) && ($this->article->author != "")) : ?>
 	<tr>
@@ -138,13 +135,13 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	<?php endif; ?>
 	</table>
 	<span class="article_separator">&nbsp;</span>
-	<?php echo $this->article->event->afterDisplayContent; ?>
+	<?php //echo $this->article->event->afterDisplayContent; ?>
 
 	<?php	
 	
 	$jsonHtml->html = ob_get_clean();
 	
-	$jsonHtml->image = null;
+	$jsonHtml->image["mobile"] = null;
 	
 
 	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
@@ -152,15 +149,24 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	foreach(@$html->find('img') as $vv)
 	{
 		if($vv->src)
-			$jsonHtml->image = JURI::root().$vv->src;
+			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
 	
-	if(!$v->image)
-		$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+	if(!$jsonHtml->image["mobile"])
+		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 
-	
+		
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+	
+	// Mask telephone links
+	$jsonHtml->html = str_replace("href=\"tel:", "hrefmask=\"weevertel:", $jsonHtml->html);
+	
+	// Mask email links
+	$jsonHtml->html = str_replace("href=\"mailto:", "hrefmask=\"weevermail:", $jsonHtml->html);
+	
+	// Mask sms links
+	$jsonHtml->html = str_replace("href=\"sms:", "hrefmask=\"weeversms:", $jsonHtml->html);
 	
 	// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 	$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
@@ -168,8 +174,13 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	$jsonHtml->html = str_replace("src=\"/", "src=\"".JURI::root(), $jsonHtml->html);
 	$jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $jsonHtml->html);
 	
+
 	// Restore external links, ensure target="_blank" applies
 	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevertel:", "href=\"tel:", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevermail:", "href=\"mailto:", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weeversms:", "href=\"sms:", $jsonHtml->html);
+	
 	$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 										"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
 	
@@ -215,10 +226,10 @@ $user		= JFactory::getUser();
 </h1>
 
 <?php  if (!$params->get('show_intro')) :
-	echo $this->item->event->afterDisplayTitle;
+	//echo $this->item->event->afterDisplayTitle;
 endif; ?>
 
-<?php echo $this->item->event->beforeDisplayContent; ?>
+<?php //echo $this->item->event->beforeDisplayContent; ?>
 
 <?php $useDefList = (($params->get('show_author')) OR ($params->get('show_category')) OR ($params->get('show_parent_category'))
 	OR ($params->get('show_create_date')) OR ($params->get('show_modify_date')) OR ($params->get('show_publish_date'))
@@ -321,7 +332,7 @@ endif; ?>
 		</p>
 	<?php endif; ?>
 <?php endif; ?>
-<?php echo $this->item->event->afterDisplayContent; ?>
+<?php //echo $this->item->event->afterDisplayContent; ?>
 </div>
 
 
@@ -329,7 +340,7 @@ endif; ?>
 
 $jsonHtml->html =  ob_get_clean();
 
-$jsonHtml->image = null;
+$jsonHtml->image["mobile"] = null;
 
 
 	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
@@ -337,15 +348,24 @@ $jsonHtml->image = null;
 	foreach(@$html->find('img') as $vv)
 	{
 		if($vv->src)
-			$jsonHtml->image = JURI::root().$vv->src;
+			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
 	
-	if(!$v->image)
-		$jsonHtml->image = JURI::root()."media/com_weever/icon_live.png";
+	if(!$v->imagee["mobile"])
+		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 
 
 // Mask external links so we leave only internal ones to play with.
 $jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+
+// Mask telephone links
+$jsonHtml->html = str_replace("href=\"tel:", "hrefmask=\"weevertel:", $jsonHtml->html);
+
+// Mask email links
+$jsonHtml->html = str_replace("href=\"mailto:", "hrefmask=\"weevermail:", $jsonHtml->html);
+
+// Mask sms links
+$jsonHtml->html = str_replace("href=\"sms:", "hrefmask=\"weeversms:", $jsonHtml->html);
 
 // For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 $jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
@@ -355,6 +375,10 @@ $jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $j
 
 // Restore external links, ensure target="_blank" applies
 $jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+$jsonHtml->html = str_replace("hrefmask=\"weevertel:", "href=\"tel:", $jsonHtml->html);
+$jsonHtml->html = str_replace("hrefmask=\"weevermail:", "href=\"mailto:", $jsonHtml->html);
+$jsonHtml->html = str_replace("hrefmask=\"weeversms:", "href=\"sms:", $jsonHtml->html);
+
 $jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 									"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
 

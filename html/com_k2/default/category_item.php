@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Inc. <http://www.weever.ca/>
+*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	0.9.2
+*	Version: 	1.1.0.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 * 
 *
 */
- 
 
 $v->image = null;
 
@@ -35,7 +34,13 @@ else
 	foreach(@$html->find('img') as $vv)
 	{
 		if($vv->src)
-			$v->image = JURI::root().$vv->src;
+		{
+			if(strstr($vv->src, "http://"))
+				$v->image = $vv->src;
+			else
+				$v->image = JURI::root().$vv->src;
+			
+		}
 	}
 	
 	if(!$v->image)
@@ -48,7 +53,7 @@ $feedItem = new R3SItemMap;
 
 $feedItem->type = "htmlContent";
 $feedItem->description = $v->introtext;
-$feedItem->name = $v->title;
+$feedItem->name = wxTags::parse($v->title);
 $feedItem->datetime["published"] = $v->created;
 $feedItem->datetime["modified"] = $v->modified;
 $feedItem->image["mobile"] = $v->image;
@@ -58,6 +63,42 @@ $feedItem->author = $v->author->name;
 $feedItem->publisher = $mainframe->getCfg('sitename');
 $feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 $feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
+
+if(count($v->tags))
+{
+
+	foreach ($v->tags as $key=>$tag)
+	{
+		$feedItem->tags[$key]["name"] = $tag->name;
+		$feedItem->tags[$key]["link"] = JURI::root().$tag->link;
+	}
+
+}
+
+$extraFields = json_decode($v->extra_fields);
+
+
+if(JRequest::getVar("geotag") == "true") 
+{
+	foreach ((array)$extraFields as $key=>$extraField)
+	{
+	
+		if(strpos($extraField->value, ";"))
+		{
+			$values = explode(";",$extraField->value);
+			
+			foreach((array)$values as $kk=>$vv)
+			{
+				$feedItem->geo[$kk][$extraFieldsFields[$key]] = trim($vv, "\r\n");
+			}
+			
+		}
+		else 
+			$feedItem->geo[0][$extraFieldsFields[$key]] = $extraField->value;
+			
+	}
+}
+
 
 $feed->items[] = $feedItem;
 
