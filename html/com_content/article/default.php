@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.2
+*	Version: 	1.2.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -155,9 +155,18 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	if(!$jsonHtml->image["mobile"])
 		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 
-	
+		
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+	
+	// Mask telephone links
+	$jsonHtml->html = str_replace("href=\"tel:", "hrefmask=\"weevertel:", $jsonHtml->html);
+	
+	// Mask email links
+	$jsonHtml->html = str_replace("href=\"mailto:", "hrefmask=\"weevermail:", $jsonHtml->html);
+	
+	// Mask sms links
+	$jsonHtml->html = str_replace("href=\"sms:", "hrefmask=\"weeversms:", $jsonHtml->html);
 	
 	// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 	$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
@@ -165,8 +174,13 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	$jsonHtml->html = str_replace("src=\"/", "src=\"".JURI::root(), $jsonHtml->html);
 	$jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $jsonHtml->html);
 	
+
 	// Restore external links, ensure target="_blank" applies
 	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevertel:", "href=\"tel:", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevermail:", "href=\"mailto:", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weeversms:", "href=\"sms:", $jsonHtml->html);
+	
 	$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 										"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
 	
@@ -344,6 +358,15 @@ $jsonHtml->image["mobile"] = null;
 // Mask external links so we leave only internal ones to play with.
 $jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
 
+// Mask telephone links
+$jsonHtml->html = str_replace("href=\"tel:", "hrefmask=\"weevertel:", $jsonHtml->html);
+
+// Mask email links
+$jsonHtml->html = str_replace("href=\"mailto:", "hrefmask=\"weevermail:", $jsonHtml->html);
+
+// Mask sms links
+$jsonHtml->html = str_replace("href=\"sms:", "hrefmask=\"weeversms:", $jsonHtml->html);
+
 // For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 $jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
 $jsonHtml->html = str_replace("href=\"", "target=\"_blank\" href=\"".JURI::root(), $jsonHtml->html);
@@ -352,6 +375,10 @@ $jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $j
 
 // Restore external links, ensure target="_blank" applies
 $jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+$jsonHtml->html = str_replace("hrefmask=\"weevertel:", "href=\"tel:", $jsonHtml->html);
+$jsonHtml->html = str_replace("hrefmask=\"weevermail:", "href=\"mailto:", $jsonHtml->html);
+$jsonHtml->html = str_replace("hrefmask=\"weeversms:", "href=\"sms:", $jsonHtml->html);
+
 $jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 									"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
 

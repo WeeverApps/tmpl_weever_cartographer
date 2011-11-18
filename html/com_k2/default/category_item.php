@@ -53,7 +53,7 @@ $feedItem = new R3SItemMap;
 
 $feedItem->type = "htmlContent";
 $feedItem->description = $v->introtext;
-$feedItem->name = $v->title;
+$feedItem->name = wxTags::parse($v->title);
 $feedItem->datetime["published"] = $v->created;
 $feedItem->datetime["modified"] = $v->modified;
 $feedItem->image["mobile"] = $v->image;
