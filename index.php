@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.2.1
+*	Version: 	1.4.5
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -46,6 +46,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
 	
+	// Mask external links so we leave only internal ones to play with.
+	$jsonHtml->html = str_replace("href=\"https://", "hrefmask=\"weevers://", $jsonHtml->html);
+	
 	// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 	$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
 	$jsonHtml->html = str_replace("href=\"", "target=\"_blank\" href=\"".JURI::root(), $jsonHtml->html);
@@ -54,6 +57,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	// Restore external links, ensure target="_blank" applies
 	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevers://", "target=\"_blank\" href=\"https://", $jsonHtml->html);
 	$jsonHtml->html = str_replace("<iframe title=\"YouTube video player\" width=\"480\" height=\"390\"",
 										"<iframe title=\"YouTube video player\" width=\"160\" height=\"130\"", $jsonHtml->html);
 	
