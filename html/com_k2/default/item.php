@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weever.ca/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.2.1
+*	Version: 	1.4.5
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -301,7 +301,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		{
 			if($vv->src)
 			{
-				if(strstr($vv->src, "http://"))
+				if(strstr($vv->src, "http://") || strstr($vv->src, "https://"))
 					$jsonHtml->image["mobile"] = $vv->src;
 				else
 					$jsonHtml->image["mobile"] = JURI::root().$vv->src;
@@ -316,6 +316,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
+	
+	// Mask external links so we leave only internal ones to play with.
+	$jsonHtml->html = str_replace("href=\"https://", "hrefmask=\"weevers://", $jsonHtml->html);
 	
 	// Mask telephone links
 	$jsonHtml->html = str_replace("href=\"tel:", "hrefmask=\"weevertel:", $jsonHtml->html);
@@ -334,6 +337,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	// Restore external links, ensure target="_blank" applies
 	$jsonHtml->html = str_replace("hrefmask=\"weever://", "target=\"_blank\" href=\"http://", $jsonHtml->html);
+	$jsonHtml->html = str_replace("hrefmask=\"weevers://", "target=\"_blank\" href=\"https://", $jsonHtml->html);
 	$jsonHtml->html = str_replace("hrefmask=\"weevertel:", "href=\"tel:", $jsonHtml->html);
 	$jsonHtml->html = str_replace("hrefmask=\"weevermail:", "href=\"mailto:", $jsonHtml->html);
 	$jsonHtml->html = str_replace("hrefmask=\"weeversms:", "href=\"sms:", $jsonHtml->html);
