@@ -59,6 +59,14 @@ class wxGeotag {
 		
 		if(!$geoData->weevermapsk2latitude_item)
 			return false;
+			
+		if(JRequest::getVar("wxdebug"))
+		{
+			print_r($item->plugins);
+			echo "\n\n";
+			print_r($geoData);
+			die();
+		}
 
 		$geoLatArray = 		explode( 	";", rtrim( $geoData->weevermapsk2latitude_item, 	";") 	);
 		$geoLongArray = 	explode( 	";", rtrim( $geoData->weevermapsk2longitude_item, 	";") 	);
