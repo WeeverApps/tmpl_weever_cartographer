@@ -72,7 +72,7 @@ class wxGeotag {
 		
 			$feedItem->geo[$key][$extraFieldsFields[0]] = $geoLatArray[$key];
 			$feedItem->geo[$key][$extraFieldsFields[1]] = $geoLongArray[$key];
-			$feedItem->geo[$key][$extraFieldsFields[3]] = $geoAddresstArray[$key];
+			$feedItem->geo[$key][$extraFieldsFields[3]] = $geoAddressArray[$key];
 			$feedItem->geo[$key][$extraFieldsFields[4]] = $geoLabelArray[$key];
 			$feedItem->geo[$key][$extraFieldsFields[5]] = $geoMarkerArray[$key];
 
