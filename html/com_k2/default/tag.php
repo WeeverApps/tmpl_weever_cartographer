@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
+*	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.1.0.1
+*	Version: 	1.5
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 * 
 *
 */
- 
+
 ## Note: Used for K2 v2.5+; earlier versions use generic.php for tags 
  
 // no direct access
@@ -31,7 +31,8 @@ jimport('joomla.environment.uri');
 
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
-
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'wxtags.php');
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php');
 
 
 	$lang =& JFactory::getLanguage();
@@ -46,18 +47,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     if(JRequest::getVar("geotag") == "true") 
     {
-	    $db = &JFactory::getDBO();					
-	    $query = "SELECT * FROM #__k2_extra_fields_groups";
-	    $db->setQuery($query);
-	    $results = $db->loadObjectList();
-	    
-	    $extraFieldsGroup = array();
-	    
-	    foreach((array)$results as $k=>$v)
-	    {
-	    	$extraFieldsGroup[$v->id] = $v->name;
-	    }
-	    
+
 	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
 	    
 	     JRequest::setVar('limit', 150);

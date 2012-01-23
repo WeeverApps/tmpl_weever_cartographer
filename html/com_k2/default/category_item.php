@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
+*	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.1.0.1
+*	Version: 	1.5
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -75,28 +75,15 @@ if(count($v->tags))
 
 }
 
-$extraFields = json_decode($v->extra_fields);
-
 
 if(JRequest::getVar("geotag") == "true") 
 {
-	foreach ((array)$extraFields as $key=>$extraField)
-	{
-	
-		if(strpos($extraField->value, ";"))
-		{
-			$values = explode(";",$extraField->value);
-			
-			foreach((array)$values as $kk=>$vv)
-			{
-				$feedItem->geo[$kk][$extraFieldsFields[$key]] = trim($vv, "\r\n");
-			}
-			
-		}
-		else 
-			$feedItem->geo[0][$extraFieldsFields[$key]] = $extraField->value;
-			
-	}
+
+	if(wxGeotag::isLegacy() == true)
+		wxGeotag::addLegacyGeoData($feedItem, $v);
+	else 
+		wxGeotag::addGeoData($feedItem, $v);
+
 }
 
 

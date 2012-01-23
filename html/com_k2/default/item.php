@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Apps Inc. <http://www.weever.ca/>
+*	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.4.5
+*	Version: 	1.5
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 * 
 *
 */
- 
+
 // no direct access
 defined('_JEXEC') or die;
 
@@ -28,7 +28,8 @@ jimport( 'joomla.environment.uri' );
 
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
-
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'wxtags.php');
+require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php');
 	
 	$conf =& JFactory::getConfig();
 	$lang =& JFactory::getLanguage();
@@ -364,42 +365,53 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		}
 	
 	}
-					
-	$db = &JFactory::getDBO();					
-	$query = "SELECT * FROM #__k2_extra_fields_groups";
-	$db->setQuery($query);
-	$fields = $db->loadObjectList();
+		
+	if(wxGeotag::isLegacy() == true) 
+	{			
 	
-	$extraFieldsGroup = array();
-	
-	foreach((array)$fields as $k=>$v)
-	{
-		$extraFieldsGroup[$v->id] = $v->name;
-	}
-	
-	//$jsonHtml->geo = array(0);
-	
-	foreach ((array)$this->item->extra_fields as $key=>$extraField)
-	{
-	
-		if($extraFieldsGroup[$extraField->group] == "geo")
+		$db = &JFactory::getDBO();					
+		$query = "SELECT * FROM #__k2_extra_fields_groups";
+		$db->setQuery($query);
+		$fields = $db->loadObjectList();
+		
+		$extraFieldsGroup = array();
+		
+		foreach((array)$fields as $k=>$v)
 		{
-			if(strpos($extraField->value, ";"))
-			{
-				$values = explode(";",$extraField->value);
-				
-				foreach((array)$values as $kk=>$vv)
-				{
-					$jsonHtml->geo[$kk][$extraField->name] = $vv;
-				}
-				
-			}
-			else 
-				$jsonHtml->geo[0][$extraField->name] = $extraField->value;
+			$extraFieldsGroup[$v->id] = $v->name;
 		}
-		else
-			$jsonHtml->relationships[$extraFieldsGroup[$extraField->group]][$extraField->name] = $extraField->value;
-	}	
+		
+		//$jsonHtml->geo = array(0);
+		
+		foreach ((array)$this->item->extra_fields as $key=>$extraField)
+		{
+		
+			if($extraFieldsGroup[$extraField->group] == "geo")
+			{
+				if(strpos($extraField->value, ";"))
+				{
+					$values = explode(";",$extraField->value);
+					
+					foreach((array)$values as $kk=>$vv)
+					{
+						$jsonHtml->geo[$kk][$extraField->name] = trim($vv, "\r\n");
+					}
+					
+				}
+				else 
+					$jsonHtml->geo[0][$extraField->name] = $extraField->value;
+			}
+			else
+				$jsonHtml->relationships[$extraFieldsGroup[$extraField->group]][$extraField->name] = $extraField->value;
+		}	
+		
+	}
+	else 
+	{
+	
+		wxGeotag::addGeoData($jsonHtml, $this->item);
+	
+	}
 	
 	$callback = JRequest::getVar('callback');
 	

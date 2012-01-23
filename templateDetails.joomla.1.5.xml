@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.5/template-install.dtd">
 <install version="1.5" type="template" method="upgrade">
-        <name>Weever_Cartographer</name>
-        <creationDate>2011-12-22</creationDate>
-        <author>Robert Gerald Porter</author>
-        <authorEmail>rob@weeverapps.com</authorEmail>
-        <authorUrl>http://www.weeverapps.com/</authorUrl>
-        <copyright>(c) 2010-2011 Weever Apps Inc.</copyright>
-        <license>GNU/GPL</license>
-        <version>1.4</version>
-        <description>Weever Cartographer R3S Template for Joomla</description>
-        <files>
-                <filename>index.php</filename>
-                <filename>index.html</filename>
-                <filename>templateDetails.xml</filename>
-                <folder>html</folder>
-                <folder>simpledom</folder>
-                <folder>classes</folder>
-        </files>
-        <positions>
-                <position>breadcrumb</position>
-                <position>left</position>
-                <position>right</position>
-                <position>top</position>
-                <position>user1</position>
-                <position>user2</position>
-                <position>user3</position>
-                <position>user4</position>
-                <position>footer</position>
-        </positions>
+    <name>Weever_Cartographer</name>
+    <creationDate>2011-01-23</creationDate>
+    <author>Robert Gerald Porter</author>
+    <authorEmail>rob@weeverapps.com</authorEmail>
+    <authorUrl>http://www.weeverapps.com/</authorUrl>
+    <copyright>(c) 2010-2012 Weever Apps Inc.</copyright>
+    <license>GPLv3</license>
+    <version>1.5</version>
+    <description>Weever Cartographer R3S Template for Joomla</description>
+    <files>
+            <filename>index.php</filename>
+            <filename>index.html</filename>
+            <filename>templateDetails.xml</filename>
+            <folder>html</folder>
+            <folder>simpledom</folder>
+            <folder>classes</folder>
+    </files>
+    <positions />
 </install>
