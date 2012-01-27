@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.2
+*	Version: 	1.5.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 * 
 *
 */
- 
 
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die( 'Restricted access' );
@@ -28,16 +27,17 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.environment.uri' );
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php';
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
-	
+
 	$mainframe = &JFactory::getApplication();
 	$lang =& JFactory::getLanguage();
+	$geoArray = array();
 	
 	$version = new JVersion;
 	$joomla = $version->getShortVersion();
-	
 	
 	if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 		$items = $this->getItems();
@@ -54,7 +54,36 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			$this->category->image = JURI::root()."images/stories/".$this->category->image;
 	}
 	
+	if( JRequest::getVar("geotag") == true )
+	{
+	
+		$_com = "com_content";
+		$db = &JFactory::getDBO();
 		
+		$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".
+				"FROM
+					#__weever_maps ".
+				"WHERE
+					component = ".$db->quote($_com)." ";
+
+		$db->setQuery($query);
+		$results = $db->loadObjectList();
+		
+		foreach( (array) $results as $k=>$v ) 
+		{
+		
+			wxGeotag::convertToLatLong($v);
+			$geoArray[$v->component_id][] = $v;
+			
+			$lastKey = end($geoArray[$v->component_id]);
+			
+			unset($geoArray[$v->component_id][$lastKey]->component_id);
+			unset($geoArray[$v->component_id][$lastKey]->location);			
+		
+		}
+		
+	}
+	
 	$feed = new R3SChannelMap;
 	
 	$feed->count = count($items);
@@ -102,6 +131,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem->author = $v->created_by;
 		$feedItem->publisher = $mainframe->getCfg('sitename');
 		
+		if( isset($geoArray[$v->id]) )
+			$feedItem->geo = $geoArray[$v->id];
+		
 		$feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 		$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
 		
@@ -109,7 +141,6 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	}
 		 
 	// Set the MIME type for JSON output.
-	$document =& JFactory::getDocument();
 	header('Content-type: application/json');				
 	header('Cache-Control: no-cache, must-revalidate');
 	

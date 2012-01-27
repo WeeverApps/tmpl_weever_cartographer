@@ -136,6 +136,16 @@ class wxGeotag {
 		}
 
 	}
+	
+	
+	public static function convertToLatLong(&$obj) {
+	
+		$point = rtrim( ltrim( $obj->location, "(POINT" ), ")" );
+		$point = explode(" ", $point);
+		$obj->latitude = $point[0];
+		$obj->longitude = $point[1];
+	
+	}
 
 
 }

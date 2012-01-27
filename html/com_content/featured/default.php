@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
+*	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
-*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.0.1
+*	Author: 	Robert Gerald Porter <rob@weeverapps.com>
+*	Version: 	1.5.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -27,13 +27,44 @@ defined('_JEXEC') or die( 'Restricted access' );
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.environment.uri' );
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php';
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
 
 	$mainframe = &JFactory::getApplication();
 	$lang =& JFactory::getLanguage();
 	$items = $this->items;
+	
+	if( JRequest::getVar("geotag") == true )
+	{
+	
+		$_com = "com_content";
+		$db = &JFactory::getDBO();
+		
+		$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".
+				"FROM
+					#__weever_maps ".
+				"WHERE
+					component = ".$db->quote($_com)." ";
+
+		$db->setQuery($query);
+		$results = $db->loadObjectList();
+		
+		foreach( (array) $results as $k=>$v ) 
+		{
+		
+			wxGeotag::convertToLatLong($v);
+			$geoArray[$v->component_id][] = $v;
+			
+			$lastKey = end($geoArray[$v->component_id]);
+			
+			unset($geoArray[$v->component_id][$lastKey]->component_id);
+			unset($geoArray[$v->component_id][$lastKey]->location);			
+		
+		}
+		
+	}
 	
 	$feed = new R3SChannelMap;
 	
@@ -79,6 +110,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem->url = JURI::root()."index.php?option=com_content&view=article&id=".$v->id;
 		$feedItem->author = $v->created_by;
 		$feedItem->publisher = $mainframe->getCfg('sitename');
+		
+		if( isset($geoArray[$v->id]) )
+			$feedItem->geo = $geoArray[$v->id];
 		
 		$feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 		$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);

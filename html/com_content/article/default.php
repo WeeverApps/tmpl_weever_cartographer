@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.4.5
+*	Version: 	1.5.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -343,6 +343,25 @@ endif; ?>
 <?php 
 
 $jsonHtml->html =  ob_get_clean();
+
+if(JRequest::getVar("geotag") == true)
+{
+
+	$_com = "com_content";
+	$db = &JFactory::getDBO();
+	
+	$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".
+			"FROM
+				#__weever_maps ".
+			"WHERE
+				component = ".$db->quote($_com)." 
+				AND
+				component_id = ".$this->item->id." ";
+
+	$db->setQuery($query);
+	$this->item->geo = $db->loadObject();	
+
+}
 
 $jsonHtml->image["mobile"] = null;
 
