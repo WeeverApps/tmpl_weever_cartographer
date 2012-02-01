@@ -349,6 +349,7 @@ if(JRequest::getVar("geotag") == true)
 
 	$_com = "com_content";
 	$db = &JFactory::getDBO();
+	$geoArray = array();
 	
 	$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".
 			"FROM
@@ -359,8 +360,22 @@ if(JRequest::getVar("geotag") == true)
 				component_id = ".$this->item->id." ";
 
 	$db->setQuery($query);
-	$this->item->geo = $db->loadObject();	
-
+	$results = $db->loadObject();	
+	
+	foreach( (array) $results as $k=>$v ) 
+	{
+	
+		wxGeotag::convertToLatLong($v);
+		$geoArray[] = $v;
+		
+		$lastKey = end($geoArray);
+		
+		unset($geoArray[$lastKey]->component_id);
+		unset($geoArray[$lastKey]->location);			
+	
+	}
+	
+	$jsonHtml->geo = $geoArray;
 }
 
 $jsonHtml->image["mobile"] = null;
