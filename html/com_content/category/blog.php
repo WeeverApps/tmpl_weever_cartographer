@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
+*	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
-*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.5.1
+*	Author: 	Robert Gerald Porter <rob@weeverapps.com>
+*	Version: 	1.6
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -73,12 +73,10 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		{
 		
 			wxGeotag::convertToLatLong($v);
+			unset($v->component_id);
+			unset($v->location);
+			
 			$geoArray[$v->component_id][] = $v;
-			
-			$lastKey = end($geoArray[$v->component_id]);
-			
-			unset($geoArray[$v->component_id][$lastKey]->component_id);
-			unset($geoArray[$v->component_id][$lastKey]->location);			
 		
 		}
 		
