@@ -361,7 +361,7 @@ if(JRequest::getVar("geotag") == true)
 				component_id = ".$this->item->id." ";
 
 	$db->setQuery($query);
-	$results = $db->loadObject();	
+	$results = $db->loadObjectList();	
 	
 	foreach( (array) $results as $k=>$v ) 
 	{
