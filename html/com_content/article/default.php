@@ -2,10 +2,10 @@
 /*
 *
 *	Weever Cartographer R3S Output Template for Joomla
-*	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
+*	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
-*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.5.1
+*	Author: 	Robert Gerald Porter <rob@weeverapps.com>
+*	Version: 	1.6
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ jimport( 'joomla.environment.uri' );
 
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
+require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
 $document =& JFactory::getDocument();
 header('Content-type: application/json');		
