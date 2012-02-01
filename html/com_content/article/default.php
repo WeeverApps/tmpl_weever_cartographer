@@ -367,12 +367,10 @@ if(JRequest::getVar("geotag") == true)
 	{
 	
 		wxGeotag::convertToLatLong($v);
+		unset($v->component_id);
+		unset($v->location);	
+		
 		$geoArray[] = $v;
-		
-		$lastKey = end($geoArray);
-		
-		unset($geoArray[$lastKey]->component_id);
-		unset($geoArray[$lastKey]->location);			
 	
 	}
 	
