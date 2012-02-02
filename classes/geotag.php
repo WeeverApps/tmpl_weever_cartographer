@@ -26,8 +26,83 @@ defined('_JEXEC') or die('Restricted access');
 
 class wxGeotag {
 
+	public static function getGeoData(&$items, $_com = "com_content", &$gps = false) {
+		
+		$db = &JFactory::getDBO();
+		$order = " "; $distance = " ";
+		$itemIds = array();
+		
+		foreach( (array) $items as $k=>$v )
+		{
+			$itemIds[] = $v->id;
+			$itemKeys[$v->id] = $k;
+		}
+			
+		$itemIdList = implode(",",$itemIds);
+		
+		if( $latitude = JRequest::getVar("latitude") && $longitude = JRequest::getVar("longitude") )
+		{
+		
+			$order 		= " ORDER BY distance "
+			$distance 	= ", glength( linestringfromwkb( linestring( 
+								GeomFromText('POINT(". $latitude." ".$longitude.")'), 
+								location ) ) ) as 'distance' ";
+			$gps = true;
+			
+		}
+		
+		$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker".$distance.
+				"FROM
+					#__weever_maps ".
+				"WHERE
+					component = ".$db->quote($_com)." AND component_id IN (".$itemIds.") ".
+				$order;
+
+		$db->setQuery($query);
+		$results = $db->loadObjectList();
+		
+		foreach( (array) $results as $k=>$v ) 
+		{
+		
+			self::convertToLatLong($v);
+			// unset($v->component_id); # Can't unset this, we need it here and for GPS. Will need to fix later for proper feed.
+			unset($v->location);
+
+			$geoArray[$v->component_id][] = $v;
+			
+			// make geo markers unique when sorting by distance
+			
+			if($gps == true)
+				$geoArrayUnique[] = $v;
+		
+		}
+		
+		
+		if($gps == true)
+		{
+		
+			$contentItems = $items;
+			$items = array(); // reset array
+		
+			// rebuild $items to sort by marker distance, using geo markers as unique IDs now 
+			// (multiple results of same $item will now be possible)
+			
+			foreach( (array) $geoArrayUnique as $k=>$v )
+			{
+			
+				$items[] = $contentItems[ $itemKeys[$v->component_id] ];
+			
+			}
+			
+		}
+			
+			
+		return $geoArray;
+		
+	}
 	
-	public static function addGeoData(&$feedItem, &$item) {
+	
+	public static function getK2PluginGeoData(&$feedItem, &$item) {
 	
 		$version = new JVersion;
 		$joomlaVersion = substr($version->getShortVersion(), 0, 3);
@@ -110,7 +185,7 @@ class wxGeotag {
 	}
 	
 	
-	public static function addLegacyGeoData(&$feedItem, &$v) {
+	public static function getK2LegacyGeoData(&$feedItem, &$v) {
 	
 		$extraFields = json_decode($v->extra_fields);
 		

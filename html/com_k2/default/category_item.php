@@ -4,8 +4,8 @@
 *	Weever Cartographer R3S Output Template for Joomla
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
-*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.5
+*	Author: 	Robert Gerald Porter <rob@weeverapps.com>
+*	Version: 	1.6
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -78,11 +78,22 @@ if(count(@$v->tags))
 
 if(JRequest::getVar("geotag") == "true") 
 {
-
-	if(wxGeotag::isLegacy() == true)
-		wxGeotag::addLegacyGeoData($feedItem, $v);
+	if($gps == true) 
+	{
+	
+		if( isset($geoArray[$v->id]) )
+			$feedItem->geo = $geoArray[$v->id];
+	
+	}
 	else 
-		wxGeotag::addGeoData($feedItem, $v);
+	{
+	
+		if(wxGeotag::isLegacy() == true)
+			wxGeotag::getK2LegacyGeoData($feedItem, $v);
+		else 
+			wxGeotag::getK2PluginGeoData($feedItem, $v);
+		
+	}
 
 }
 

@@ -409,7 +409,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	else 
 	{
 	
-		wxGeotag::addGeoData($jsonHtml, $this->item);
+		wxGeotag::getK2PluginGeoData($jsonHtml, $this->item);
 	
 	}
 	

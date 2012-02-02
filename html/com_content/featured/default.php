@@ -36,33 +36,13 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$lang =& JFactory::getLanguage();
 	$items = $this->items;
 	
-	if( JRequest::getVar("geotag") == true )
-	{
+	$version = new JVersion;
+	$joomla = $version->getShortVersion();
 	
-		$_com = "com_content";
-		$db = &JFactory::getDBO();
-		
-		$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".
-				"FROM
-					#__weever_maps ".
-				"WHERE
-					component = ".$db->quote($_com)." ";
-
-		$db->setQuery($query);
-		$results = $db->loadObjectList();
-		
-		foreach( (array) $results as $k=>$v ) 
-		{
-		
-			wxGeotag::convertToLatLong($v);
-			unset($v->component_id);
-			unset($v->location);
-			
-			$geoArray[$v->component_id][] = $v;
-		
-		}
-		
-	}
+	$geoArray = array();	$gps = false;
+	
+	if( JRequest::getVar("geotag") == true && substr($joomla,0,3) != '1.5')
+		$geoArray = wxGeotag::getGeoData($items, "com_content", $gps);
 	
 	$feed = new R3SChannelMap;
 	

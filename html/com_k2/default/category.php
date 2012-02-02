@@ -72,6 +72,11 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $items = $model->getData($ordering);
     
+    $geoArray = array();	$gps = false;
+    
+    if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
+    	$geoArray = wxGeotag::getGeoData($items, "com_k2", $gps);
+    
     if(!$category->image)
     	$category->image = JURI::root()."media/com_weever/icon_live.png";
     else 
