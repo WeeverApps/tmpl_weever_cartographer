@@ -81,8 +81,7 @@ if(JRequest::getVar("geotag") == "true")
 	if($gps == true) 
 	{
 	
-		if( isset($geoArray[$v->id]) )
-			$feedItem->geo = $geoArray[$v->id];
+		$feedItem->geo = $geoArray[$k];
 	
 	}
 	else 

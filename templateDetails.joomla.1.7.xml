@@ -2,13 +2,13 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 1.6//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.6/template-install.dtd">
 <extension version="1.6" type="template" method="upgrade">
     <name>Weever_Cartographer</name>
-    <creationDate>2011-01-24</creationDate>
+    <creationDate>2011-02-06</creationDate>
     <author>Robert Gerald Porter</author>
     <authorEmail>rob@weeverapps.com</authorEmail>
     <authorUrl>http://www.weeverapps.com/</authorUrl>
     <copyright>(c) 2010-2012 Weever Apps Inc.</copyright>
     <license>GPLv3</license>
-    <version>1.5</version>
+    <version>1.6</version>
     <description>Weever Cartographer R3S Template for Joomla</description>
     <files>
             <filename>index.php</filename>

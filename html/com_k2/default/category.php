@@ -75,7 +75,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $geoArray = array();	$gps = false;
     
     if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
-    	$geoArray = wxGeotag::getGeoData($items, "com_k2", $gps);
+    	$items = wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
     
     if(!$category->image)
     	$category->image = JURI::root()."media/com_weever/icon_live.png";
@@ -99,7 +99,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
 	        
 	        
-	foreach((array)$items as $k=>$v)
+	foreach( (array) $items as $k=>$v )
     {
     	include('category_item.php');           	
     }

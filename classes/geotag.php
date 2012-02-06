@@ -26,7 +26,7 @@ defined('_JEXEC') or die('Restricted access');
 
 class wxGeotag {
 
-	public static function getGeoData(&$items, $_com = "com_content", &$gps = false) {
+	public static function getGeoData($items, $_com = "com_content", &$gps = false, &$geoArray) {
 		
 		$db = &JFactory::getDBO();
 		$order = " "; $distance = " ";
@@ -40,12 +40,15 @@ class wxGeotag {
 			
 		$itemIdList = implode(",",$itemIds);
 		
-		if( $latitude = JRequest::getVar("latitude") && $longitude = JRequest::getVar("longitude") )
+		if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
 		{
 		
-			$order 		= " ORDER BY distance "
+			$latitude = JRequest::getVar("latitude");
+			$longitude = JRequest::getVar("longitude");
+		
+			$order 		= " ORDER BY distance ";
 			$distance 	= ", glength( linestringfromwkb( linestring( 
-								GeomFromText('POINT(". $latitude." ".$longitude.")'), 
+								GeomFromText('POINT(".$latitude." ".$longitude.")'), 
 								location ) ) ) as 'distance' ";
 			$gps = true;
 			
@@ -55,7 +58,7 @@ class wxGeotag {
 				"FROM
 					#__weever_maps ".
 				"WHERE
-					component = ".$db->quote($_com)." AND component_id IN (".$itemIds.") ".
+					component = ".$db->quote($_com)." AND component_id IN (".$itemIdList.") ".
 				$order;
 
 		$db->setQuery($query);
@@ -63,17 +66,15 @@ class wxGeotag {
 		
 		foreach( (array) $results as $k=>$v ) 
 		{
-		
+			
 			self::convertToLatLong($v);
-			// unset($v->component_id); # Can't unset this, we need it here and for GPS. Will need to fix later for proper feed.
-			unset($v->location);
-
-			$geoArray[$v->component_id][] = $v;
 			
 			// make geo markers unique when sorting by distance
 			
 			if($gps == true)
 				$geoArrayUnique[] = $v;
+			else 
+				$geoArray[$v->component_id][] = $v;
 		
 		}
 		
@@ -82,22 +83,39 @@ class wxGeotag {
 		{
 		
 			$contentItems = $items;
-			$items = array(); // reset array
+			$items = array();
+			$i = 0;
 		
 			// rebuild $items to sort by marker distance, using geo markers as unique IDs now 
 			// (multiple results of same $item will now be possible)
 			
 			foreach( (array) $geoArrayUnique as $k=>$v )
 			{
-			
-				$items[] = $contentItems[ $itemKeys[$v->component_id] ];
+				
+				$i++;
+				
+				$items[$i] = $contentItems[ $itemKeys[$v->component_id] ];
+				$geoArray[$i] = $v;
+				
+				unset($geoArray[$i]->component_id);
+				unset($geoArray[$i]->location);
 			
 			}
 			
 		}
+		
+		if(JRequest::getVar("wxdebug"))
+		{
+			print_r($items);
+			echo "\n\n";
+			echo $query;
+			echo $distance;
+			echo "Lat: ".$latitude;
+			die();
+		}
 			
 			
-		return $geoArray;
+		return $items;
 		
 	}
 	
