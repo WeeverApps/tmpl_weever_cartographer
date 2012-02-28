@@ -111,7 +111,7 @@ class wxGeotag {
 			echo $query;
 			echo $distance;
 			echo "Lat: ".$latitude;
-			die();
+			jexit();
 		}
 			
 			
@@ -150,17 +150,18 @@ class wxGeotag {
 			
 		}
 		
-		if(!$geoData->weevermapsk2latitude_item)
-			return false;
-			
 		if(JRequest::getVar("wxdebug"))
 		{
 			print_r($item->plugins);
 			echo "\n\n";
 			print_r($geoData);
-			die();
+			jexit();
 		}
-
+		
+		
+		if(!$geoData->weevermapsk2latitude_item)
+			return false;
+			
 		$geoLatArray = 		explode( 	";", rtrim( $geoData->weevermapsk2latitude_item, 	";") 	);
 		$geoLongArray = 	explode( 	";", rtrim( $geoData->weevermapsk2longitude_item, 	";") 	);
 		$geoAddressArray = 	explode( 	";", rtrim( $geoData->weevermapsk2address_item, 	";") 	);
@@ -226,6 +227,12 @@ class wxGeotag {
 			else 
 				$feedItem->geo[0][$extraFieldsFields[$key]] = $extraField->value;
 				
+		}
+		
+		if(JRequest::getVar("wxdebug"))
+		{
+			print_r($extraFields);
+			jexit();
 		}
 
 	}

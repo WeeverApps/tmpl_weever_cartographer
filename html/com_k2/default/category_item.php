@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6
+*	Version: 	1.6.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -51,16 +51,16 @@ $v->introtext = "";
 
 $feedItem = new R3SItemMap;
 
-$feedItem->type = "htmlContent";
-$feedItem->description = $v->introtext;
-$feedItem->name = wxTags::parse($v->title);
+$feedItem->type 				= "htmlContent";
+$feedItem->description 			= $v->introtext;
+$feedItem->name 				= wxTags::parse($v->title);
 $feedItem->datetime["published"] = $v->created;
 $feedItem->datetime["modified"] = $v->modified;
-$feedItem->image["mobile"] = $v->image;
-$feedItem->image["full"] = $v->image;
-$feedItem->url = JURI::root()."index.php?option=com_k2&view=item&id=".$v->id;
-$feedItem->author = @$v->author->name; // check to see if this exists someday
-$feedItem->publisher = $mainframe->getCfg('sitename');
+$feedItem->image["mobile"] 		= $v->image;
+$feedItem->image["full"] 		= $v->image;
+$feedItem->url 					= JURI::root()."index.php?option=com_k2&view=item&id=".$v->id;
+$feedItem->author 				= @$v->author->name; // check to see if this exists someday
+$feedItem->publisher 			= $document->getCfg('sitename');
 $feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 $feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
 
@@ -78,6 +78,7 @@ if(count(@$v->tags))
 
 if(JRequest::getVar("geotag") == "true") 
 {
+
 	if($gps == true) 
 	{
 	
@@ -89,8 +90,9 @@ if(JRequest::getVar("geotag") == "true")
 	
 		if(wxGeotag::isLegacy() == true)
 			wxGeotag::getK2LegacyGeoData($feedItem, $v);
-		else 
+		else {
 			wxGeotag::getK2PluginGeoData($feedItem, $v);
+		}
 		
 	}
 

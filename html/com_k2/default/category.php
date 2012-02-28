@@ -4,8 +4,8 @@
 *	Weever Cartographer R3S Output Template for Joomla
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
-*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.5
+*	Author: 	Robert Gerald Porter <rob@weeverapps.com>
+*	Version: 	1.6.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -32,15 +32,18 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'wxtags.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php');
 
+	if( JRequest::getVar('wxdebug') )
+		ini_set('error_reporting', E_ALL);
 
-	$lang =& JFactory::getLanguage();
-    $mainframe = &JFactory::getApplication();
-    $model = &$this->getModel('itemlist');
-    $params = &JComponentHelper::getParams('com_k2');
+	$lang 			= &JFactory::getLanguage();
+    $document 		= &JFactory::getApplication();
+    $model 			= &$this->getModel('itemlist');
+    $params 		= &JComponentHelper::getParams('com_k2');
+    $category 		= &JTable::getInstance('K2Category', 'Table');
+    $id 			= JRequest::getInt('id');
     
-    $id = JRequest::getInt('id');
     JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'tables');
-    $category = &JTable::getInstance('K2Category', 'Table');
+
     $category->load($id);
 
     //Merge params
@@ -72,6 +75,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $items = $model->getData($ordering);
     
+    if( JRequest::getVar('wxdebug') )
+    	print_r($items);
+    
     $geoArray = array();	$gps = false;
     
     if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
@@ -82,22 +88,21 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     else 
     	$category->image = JURI::root()."media/k2/categories/".$category->image;
     
-    $feed = new R3SChannelMap;
-    $feed->count = count($items);
-    $feed->thisPage = 1;
-    $feed->lastPage = 1;
-    $feed->language = $lang->_default;
-    $feed->sort = $ordering;
-    $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
-    $feed->description = "test";
-    $feed->name = $category->name;
-    $feed->image["mobile"] = $category->image;
-    $feed->image["full"] = $category->image;
-    $feed->items = array();
+    $feed 					= new R3SChannelMap;
+    $feed->count 			= count($items);
+    $feed->thisPage 		= 1;
+    $feed->lastPage 		= 1;
+    $feed->language 		= $lang->_default;
+    $feed->sort 			= $ordering;
+    $feed->url 				= JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
+    $feed->description 		= "test";
+    $feed->name 			= $category->name;
+    $feed->image["mobile"] 	= $category->image;
+    $feed->image["full"] 	= $category->image;
+    $feed->items 			= array();
 	        
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
-	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
-	        
+	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);  
 	        
 	foreach( (array) $items as $k=>$v )
     {
@@ -105,7 +110,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     }
     
 	// Set the MIME type for JSON output.
-	$document =& JFactory::getDocument();
+
 	header('Content-type: application/json');		
 	header('Cache-Control: no-cache, must-revalidate');
 	

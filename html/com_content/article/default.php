@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6
+*	Version: 	1.6.3
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ $lang =& JFactory::getLanguage();
 
 $jsonHtml = new R3SHtmlContentDetailsMap;
 
-$jsonHtml->language = $lang->_default;
+$jsonHtml->language = @$lang->_default; // sometimes error?
 $jsonHtml->publisher = $conf->getValue('config.sitename');
 
 $version = new JVersion;
@@ -388,7 +388,7 @@ $jsonHtml->image["mobile"] = null;
 			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
 	
-	if(!$v->imagee["mobile"])
+	if(!$jsonHtml->image["mobile"])
 		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 
 
