@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.6.4
+*	Version: 	1.6.4.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -23,13 +23,17 @@
 
 ## Note: Used for K2 v2.5+; earlier versions use generic.php for tags 
  
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
+
+if( JRequest::getVar('wxdebug') )
+	ini_set('error_reporting', E_ALL);
 
 jimport('joomla.application.component.view');
 jimport('joomla.environment.uri');
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+if( !class_exists('simple_html_dom_node') )
+	require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+	
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'wxtags.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php');
@@ -43,7 +47,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $ordering = $params->get('tagOrdering');
     
     // override K2's leading/primary/secondary/link lists
-    JRequest::setVar('limit', 15);
+    JRequest::setVar('limit', 150);
     
     if(JRequest::getVar("geotag") == "true") 
     {

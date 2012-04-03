@@ -19,11 +19,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-// no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die();
+
+if( JRequest::getVar('wxdebug') )
+	ini_set('error_reporting', E_ALL);
+	
 jimport( 'joomla.environment.uri' );
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+if( !class_exists('simple_html_dom_node') )
+	require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+	
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
 	$mainframe = &JFactory::getApplication();
@@ -46,7 +51,16 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	foreach ($this->rows as $v)
 	{
 	
-		$html = SimpleHTMLDomHelper::str_get_html($v->image);
+		if( class_exists('SimpleHTMLDomHelper') )
+			$html = SimpleHTMLDomHelper::str_get_html($v->image);
+		else {
+		
+			if( function_exists('str_get_html') )
+				$html = str_get_html($v->image);
+			else 
+				$html = null;
+			
+		}
 	
 		foreach(@$html->find('img') as $vv)
 		{

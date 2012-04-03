@@ -5,7 +5,7 @@
 *	(c) 2010-2011 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.0.1
+*	Version: 	1.6.4.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -21,13 +21,17 @@
 *
 */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die();
+
+if( JRequest::getVar('wxdebug') )
+	ini_set('error_reporting', E_ALL);
 
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.environment.uri' );
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+if( !class_exists('simple_html_dom_node') )
+	require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+	
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
 	
@@ -69,7 +73,16 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	{
 		$v->image = null;
 
-		$html = SimpleHTMLDomHelper::str_get_html($v->text);
+		if( class_exists('SimpleHTMLDomHelper') )
+			$html = SimpleHTMLDomHelper::str_get_html($v->text);
+		else {
+		
+			if( function_exists('str_get_html') )
+				$html = str_get_html($v->text);
+			else 
+				$html = null;
+			
+		}
 		
 		foreach(@$html->find('img') as $vv)
 		{

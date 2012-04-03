@@ -18,13 +18,17 @@
  * along with EventList; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
+ 
+defined('_JEXEC') or die();
 
-// no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+if( JRequest::getVar('wxdebug') )
+	ini_set('error_reporting', E_ALL);
 
 jimport( 'joomla.environment.uri' );
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+if( !class_exists('simple_html_dom_node') )
+	require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+	
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
 

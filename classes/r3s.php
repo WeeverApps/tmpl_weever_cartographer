@@ -4,8 +4,8 @@
 *	Weever Cartographer R3S Output Template for Joomla
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
-*	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.5
+*	Author: 	Robert Gerald Porter <rob@weeverapps.com>
+*	Version: 	1.7
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -18,11 +18,27 @@
 *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *   GNU General Public License for more details <http://www.gnu.org/licenses/>.
 * 
-*
 */
  
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
+
+class R3SProfileMap {
+
+	public 		$name;
+	public 		$images			= array();
+	public 		$tags			= array();
+	public		$geo			= array();
+	public 		$url;
+	public 		$id;
+	public 		$properties;
+	public		$description;
+	public 		$generator		= "Weever Cartographer R3S Template for Joomla";
+	public 		$copyright;
+	public 		$rating;
+	public 		$r3sVersion		= "0.8.2";
+	public 		$relationships;
+
+}
 
 class R3SHtmlContentDetailsMap {
 

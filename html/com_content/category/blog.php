@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6
+*	Version: 	1.7
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -21,13 +21,17 @@
 *
 */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die( 'Restricted access' );
+defined('_JEXEC') or die();
+
+if( JRequest::getVar('wxdebug') )
+	ini_set('error_reporting', E_ALL);
 
 jimport( 'joomla.application.component.view');
 jimport( 'joomla.environment.uri' );
 
-require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+if( !class_exists('simple_html_dom_node') )
+	require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+	
 require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php';
 require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
@@ -39,18 +43,42 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$joomla = $version->getShortVersion();
 	
 	if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
+	{
+	
 		$items = $this->getItems();
-	else 
+		
+		if(!$this->category->image)
+			$this->category->image = JURI::root()."media/com_weever/icon_live.png";
+			
+		else 
+		{
+		
+			if( strstr($this->category->image, "/") )
+				$this->category->image = JURI::root().$this->category->image;
+			else 
+				$this->category->image = JURI::root()."images/stories/".$this->category->image;
+				
+		}
+		
+	}
+	else
+	{ 
+	
 		$items = $this->items;
 		
-	if(!$this->category->image)
-		$this->category->image = JURI::root()."media/com_weever/icon_live.png";
-	else 
-	{
-		if( strstr($this->category->image, "/") )
-			$this->category->image = JURI::root().$this->category->image;
+		if(!$this->category->getParams()->get('image'))
+			$this->category->image = JURI::root()."media/com_weever/icon_live.png";
+			
 		else 
-			$this->category->image = JURI::root()."images/stories/".$this->category->image;
+		{
+		
+			if( strstr($this->category->getParams()->get('image'), "/") )
+				$this->category->image = JURI::root().$this->category->getParams()->get('image');
+			else 
+				$this->category->image = JURI::root()."images/stories/".$this->category->getParams()->get('image');
+				
+		}
+		
 	}
 	
 	$geoArray = array();	$gps = false;
@@ -63,7 +91,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$feed->count = count($items);
 	$feed->thisPage = 1;
 	$feed->lastPage = 1;
-	$feed->language = $lang->_default;
+	$feed->language = @$lang->_default;
 	$feed->sort = "normal";
 	$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
 	$feed->description = $this->category->description;
@@ -77,9 +105,25 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		 
 	foreach( (array) $items as $k=>$v )
 	{
+	
 		$v->image = null;
+		
+		if(substr($joomla,0,3) != '1.5') {
+		
+			$v->text = $v->introtext;
+			
+		}
 
-		$html = SimpleHTMLDomHelper::str_get_html($v->text);
+		if( class_exists('SimpleHTMLDomHelper') )
+			$html = SimpleHTMLDomHelper::str_get_html($v->text);
+		else {
+		
+			if( function_exists('str_get_html') )
+				$html = str_get_html($v->text);
+			else 
+				$html = null;
+			
+		}
 		
 		foreach(@$html->find('img') as $vv)
 		{
@@ -89,8 +133,6 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		
 		if(!$v->image)
 			$v->image = JURI::root()."media/com_weever/icon_live.png";
-	
-		$v->text = "";
 		
 		$feedItem = new R3SItemMap;
 		
@@ -114,6 +156,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
 		
 		$feed->items[] = $feedItem;
+		
 	}
 		 
 	// Set the MIME type for JSON output.

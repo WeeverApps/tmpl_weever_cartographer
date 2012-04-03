@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6.4
+*	Version: 	1.6.4.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -29,7 +29,17 @@ if(JFile::exists(JPATH_SITE.DS.'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5("Ima
 }	
 else
 {
-	$html = SimpleHTMLDomHelper::str_get_html($v->introtext);
+
+	if( class_exists('SimpleHTMLDomHelper') )
+		$html = SimpleHTMLDomHelper::str_get_html($v->introtext);
+	else {
+	
+		if( function_exists('str_get_html') )
+			$html = str_get_html($v->introtext);
+		else 
+			$html = null;
+		
+	}
 	
 	foreach(@$html->find('img') as $vv)
 	{

@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6.3
+*	Version: 	1.6.4.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -31,12 +31,16 @@
 * @license		GNU General Public License version 2 or later; see LICENSE.txt
 */
 
-// no direct access
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
+
+if( JRequest::getVar('wxdebug') )
+	ini_set('error_reporting', E_ALL);
 
 jimport( 'joomla.environment.uri' );
 
-require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php');
+if( !class_exists('simple_html_dom_node') )
+	require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'simpledom' . DS . 'simpledom.php';
+	
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
@@ -144,8 +148,16 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	
 	$jsonHtml->image["mobile"] = null;
 	
-
-	$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
+	if( class_exists('SimpleHTMLDomHelper') )
+		$html = SimpleHTMLDomHelper::str_get_html($jsonHtml->html);
+	else {
+	
+		if( function_exists('str_get_html') )
+			$html = str_get_html($jsonHtml->html);
+		else 
+			$html = null;
+	
+	}
 	
 	foreach(@$html->find('img') as $vv)
 	{
