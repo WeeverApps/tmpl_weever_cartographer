@@ -108,6 +108,8 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	{
 	
 		$v->image = null;
+		
+		$v->text = $v->introtext;
 
 		if( class_exists('SimpleHTMLDomHelper') )
 			$html = SimpleHTMLDomHelper::str_get_html($v->text);

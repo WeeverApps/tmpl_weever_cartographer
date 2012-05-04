@@ -65,7 +65,10 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		 
 	foreach( (array) $items as $k=>$v )
 	{
+	
 		$v->image = null;
+		
+		$v->text = $v->introtext;
 
 		if( class_exists('SimpleHTMLDomHelper') )
 			$html = SimpleHTMLDomHelper::str_get_html($v->text);
@@ -111,6 +114,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
 		
 		$feed->items[] = $feedItem;
+		
 	}
 		 
 	// Set the MIME type for JSON output.

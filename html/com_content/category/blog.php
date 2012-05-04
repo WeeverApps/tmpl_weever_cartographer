@@ -105,14 +105,10 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		 
 	foreach( (array) $items as $k=>$v )
 	{
-	
+		
 		$v->image = null;
-		
-		if(substr($joomla,0,3) != '1.5') {
-		
-			$v->text = $v->introtext;
-			
-		}
+
+		$v->text = $v->introtext;
 
 		if( class_exists('SimpleHTMLDomHelper') )
 			$html = SimpleHTMLDomHelper::str_get_html($v->text);
