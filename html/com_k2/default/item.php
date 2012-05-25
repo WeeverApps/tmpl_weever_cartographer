@@ -287,10 +287,35 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	<?php 
 	
+	$jsonHtml->html 		= ob_get_clean();
+	$jsonHtml->id 			= $this->item->id;
 	
-	$jsonHtml->html = ob_get_clean();
-	$jsonHtml->id = $this->item->id;
+	$db 		= &JFactory::getDBO();					
+	$query 		= "SELECT * FROM #__k2_extra_fields";
 	
+	$db->setQuery($query);
+	
+	$result = @$db->loadObjectList();
+	
+	$extraFields = array();
+	
+	foreach( (array) $result as $v ) 
+	{
+	
+		$extraFields[$v->id] = $v->name;
+	
+	}
+	
+	$itemExtraFields 		= $this->item->extra_fields;
+	
+	$jsonHtml->properties	= new StdClass();
+	
+	foreach ( (array) $itemExtraFields as $key=>$extraField )
+	{
+	
+		$jsonHtml->properties->{$extraFields[$extraField->id]} 	= $extraField->value;
+			
+	}
 	
 	$jsonHtml->image["mobile"] = null;
 	
@@ -326,8 +351,6 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		if(!$jsonHtml->image["mobile"])
 			$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
 	}
-	
-	
 	
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);

@@ -61,6 +61,17 @@ $v->introtext = "";
 
 $feedItem = new R3SItemMap;
 
+$itemExtraFields = json_decode($v->extra_fields);
+
+$feedItem->properties	= new StdClass();
+
+foreach ( $itemExtraFields as $key=>$extraField )
+{
+
+	$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
+		
+}
+
 $feedItem->type 				= "htmlContent";
 $feedItem->description 			= $v->introtext;
 $feedItem->name 				= wxTags::parse($v->title);
@@ -71,8 +82,8 @@ $feedItem->image["full"] 		= $v->image;
 $feedItem->url 					= JURI::root()."index.php?option=com_k2&view=item&id=".$v->id;
 $feedItem->author 				= @$v->author->name; // check to see if this exists someday
 $feedItem->publisher 			= $document->getCfg('sitename');
-$feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
-$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
+$feedItem->url 					= str_replace("?template=weever_cartographer","",$feedItem->url);
+$feedItem->url 					= str_replace("&template=weever_cartographer","",$feedItem->url);
 
 if(count(@$v->tags))
 {

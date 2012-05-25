@@ -56,9 +56,10 @@ class R3SHtmlContentDetailsMap {
 	public 		$generator		= "Weever Cartographer R3S Template for Joomla";
 	public 		$copyright;
 	public 		$rating;
-	public 		$r3sVersion		= "0.8.1";
+	public 		$r3sVersion		= "0.8.2";
 	public 		$license;
 	public 		$relationships;
+	public		$properties;
 
 }
 
@@ -76,6 +77,7 @@ class R3SItemMap {
 	public 		$author;
 	public 		$publisher;
 	public 		$relationships;
+	public		$properties;
 
 }
 

@@ -42,7 +42,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $params 		= &JComponentHelper::getParams('com_k2');
     $category 		= &JTable::getInstance('K2Category', 'Table');
     $id 			= JRequest::getInt('id');
-    
+
     JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'tables');
 
     $category->load($id);
@@ -60,6 +60,22 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $params->merge($cparams);
     
     $ordering = $params->get('catOrdering');
+    
+    $db 		= &JFactory::getDBO();					
+    $query 		= "SELECT * FROM #__k2_extra_fields";
+    
+    $db->setQuery($query);
+    
+    $result = @$db->loadObjectList();
+    
+    $extraFields = array();
+    
+    foreach( (array) $result as $v ) 
+    {
+    
+    	$extraFields[$v->id] = $v->name;
+    
+    }
     
     if(JRequest::getVar("geotag") == "true") 
     {
