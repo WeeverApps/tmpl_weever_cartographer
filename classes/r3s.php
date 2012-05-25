@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.7
+*	Version: 	1.7.2
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -99,7 +99,7 @@ class R3SChannelMap {
 	public 		$description;
 	public		$geo			= array();
 	public 		$name;
-	public 		$r3sVersion		= "0.8.1";
+	public 		$r3sVersion		= "0.8.2";
 	public 		$relationships;
 	public 		$items;
 
