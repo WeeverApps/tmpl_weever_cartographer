@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.7.2
+*	Version: 	1.8
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	$jsonHtml = new R3SHtmlContentDetailsMap;
 	
-	$jsonHtml->language = $lang->_default;
+	$jsonHtml->language = @$lang->_default;
 	$jsonHtml->publisher = $conf->getValue('config.sitename');
 	
 	$document =& JFactory::getDocument();
@@ -313,7 +313,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	foreach ( (array) $itemExtraFields as $key=>$extraField )
 	{
 	
-		$jsonHtml->properties->{$extraFields[$extraField->id]} 	= $extraField->value;
+		if ( $extraFields[$extraField->id] )
+			$jsonHtml->properties->{$extraFields[$extraField->id]} 	= $extraField->value;
 			
 	}
 	
