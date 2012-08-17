@@ -77,7 +77,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     }
     
-    if(JRequest::getVar("geotag") == "true" && !JRequest::getVar("latitude") ) 
+    if( JRequest::getVar("geotag") == "true" ) 
     {
 	    
 	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
