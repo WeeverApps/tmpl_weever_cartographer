@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6.4.2
+*	Version: 	1.8.1.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     //Merge params
     $cparams = new JParameter($category->params);
     
-    if ($cparams->get('inheritFrom')) 
+    if ( $cparams->get('inheritFrom') ) 
     {
         $masterCategory = &JTable::getInstance('K2Category', 'Table');
         $masterCategory->load($cparams->get('inheritFrom'));
@@ -86,7 +86,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	    
     } else {
 
-    	JRequest::setVar('limit', 150);
+		// fix for K2's weird way of working with limits and primary/secondary/links unless the user has set a lot of links
+    	JRequest::setVar('limit', $_GET["limit"] + 10);
     
     }
     
