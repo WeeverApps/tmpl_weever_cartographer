@@ -65,12 +65,17 @@ $itemExtraFields = json_decode($v->extra_fields);
 
 $feedItem->properties	= new StdClass();
 
-foreach ( $itemExtraFields as $key=>$extraField )
-{
+if ($itemExtraFields) {
 
-	$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
-		
+	foreach ( $itemExtraFields as $key=>$extraField )
+	{
+
+		$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
+			
+	}
+
 }
+
 
 $feedItem->type 				= "htmlContent";
 $feedItem->description 			= $v->introtext;
