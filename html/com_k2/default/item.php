@@ -288,7 +288,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	<?php 
 	
 	$jsonHtml->html 		= ob_get_clean();
-	$jsonHtml->id 			= $this->item->id;
+	$jsonHtml->uuid 		= $this->item->id;
+	$jsonHtml->url 			= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	
 	$db 		= &JFactory::getDBO();					
 	$query 		= "SELECT * FROM #__k2_extra_fields";

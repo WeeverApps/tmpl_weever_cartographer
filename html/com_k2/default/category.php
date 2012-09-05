@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.8.1.2
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -82,7 +82,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	    
 	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
 
-	    JRequest::setVar('limit', 150);
+	   	JRequest::setVar('limit', 150);
 	    
     } else {
 
@@ -121,10 +121,18 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	        
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
 	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);  
+	
+	$i = 0;
 	        
 	foreach( (array) $items as $k=>$v )
     {
-    	include('category_item.php');           	
+    	$i++;
+    	
+    	if( JRequest::getVar("latitude") && $i > 25 )
+    		continue;
+    		
+    	include('category_item.php');     
+    	      	
     }
     
 	// Set the MIME type for JSON output.

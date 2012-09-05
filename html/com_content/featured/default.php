@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6.4.1
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -95,7 +95,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem = new R3SItemMap;
 		
 		$feedItem->type = "htmlContent";
-		$feedItem->description = $v->text;
+		$feedItem->description = "";
 		$feedItem->name = $v->title;
 		$feedItem->datetime["published"] = $v->created;
 		$feedItem->datetime["modified"] = $v->modified;

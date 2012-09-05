@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.7.2
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ class wxGeotag {
 			$order 		= " ORDER BY distance ";
 			$distance 	= ", glength( linestringfromwkb( linestring( 
 								GeomFromText('POINT(".$latitude." ".$longitude.")'), 
-								location ) ) ) as 'distance' ";
+								location ) ) ) as 'distance', 'rad' as 'distanceUnit' ";
 			$gps = true;
 			
 		}
