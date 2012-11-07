@@ -70,8 +70,8 @@ if ($itemExtraFields) {
 	foreach ( $itemExtraFields as $key=>$extraField )
 	{
 
-		$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
-			
+		if ( isset($extraFields[$extraField->id]) )
+			$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
 	}
 
 }
