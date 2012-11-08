@@ -70,8 +70,8 @@ if ($itemExtraFields) {
 		if( !isset( $extraField->value) || !isset( $extraField->id) || empty($extraFields) )
 			continue;
 
-		$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
-			
+		if ( isset($extraFields[$extraField->id]) )
+			$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
 	}
 
 }
