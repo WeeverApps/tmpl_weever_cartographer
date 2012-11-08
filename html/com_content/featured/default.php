@@ -86,9 +86,6 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			if($vv->src)
 				$v->image = JURI::root().$vv->src;
 		}
-		
-		if(!$v->image)
-			$v->image = JURI::root()."media/com_weever/icon_live.png";
 	
 		$v->text = "";
 		

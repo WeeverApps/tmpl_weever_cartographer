@@ -39,9 +39,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$lang =& JFactory::getLanguage();
 	$items = $this->items;
 	
-	if(!$this->category->image)
-		$this->category->image = JURI::root()."media/com_weever/icon_live.png";
-	else 
+	if($this->category->image)
 		$this->category->image = JURI::root()."images/stories/".$this->category->image;	
 	
 	$feed = new R3SChannelMap;
@@ -84,9 +82,6 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			if($vv->src)
 				$v->image = JURI::root().$vv->src;
 		}
-		
-		if(!$v->image)
-			$v->image = JURI::root()."media/com_weever/icon_live.png";
 	
 		$v->text = "";
 		

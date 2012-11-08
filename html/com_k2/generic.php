@@ -43,11 +43,17 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $ordering = $params->get('tagOrdering');
     
-    // override K2's leading/primary/secondary/link lists
-    JRequest::setVar('limit', 150);
+	// override K2's leading/primary/secondary/link lists
+	JRequest::setVar('limit', 15);
+	
+	if( JRequest::getVar("start") )
+		JRequest::setVar( "limitstart", JRequest::getVar("start") );
     
     if(JRequest::getVar("geotag") == "true")     
 	     JRequest::setVar('limit', 150);
+	     
+	    if( JRequest::getVar('wxdebuglimit') )
+	    	print_r( "\ngeneric: ". JRequest::getVar("limit") );
     
     $items = $model->getData($ordering);
     

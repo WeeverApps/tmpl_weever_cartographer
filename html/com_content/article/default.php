@@ -164,10 +164,6 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 		if($vv->src)
 			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
-	
-	if(!$jsonHtml->image["mobile"])
-		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
-
 		
 	// Mask external links so we leave only internal ones to play with.
 	$jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);
@@ -399,10 +395,6 @@ $jsonHtml->image["mobile"] = null;
 		if($vv->src)
 			$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 	}
-	
-	if(!$jsonHtml->image["mobile"])
-		$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
-
 
 // Mask external links so we leave only internal ones to play with.
 $jsonHtml->html = str_replace("href=\"http://", "hrefmask=\"weever://", $jsonHtml->html);

@@ -52,9 +52,6 @@ else
 			
 		}
 	}
-	
-	if(!$v->image)
-		$v->image = JURI::root()."media/com_weever/icon_live.png";
 }
 
 $v->introtext = "";
@@ -69,6 +66,9 @@ if ($itemExtraFields) {
 
 	foreach ( $itemExtraFields as $key=>$extraField )
 	{
+	
+		if( !isset( $extraField->value) || !isset( $extraField->id) || empty($extraFields) )
+			continue;
 
 		$feedItem->properties->{$extraFields[$extraField->id]} = $extraField->value;
 			

@@ -77,6 +77,12 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     }
     
+    if( JRequest::getVar('wxdebuglimit') )
+    	print_r($_GET["limit"]);
+    	
+    if( JRequest::getVar("start") )
+    	JRequest::setVar( "limitstart", JRequest::getVar("start") );
+    
     if( JRequest::getVar("geotag") == "true" ) 
     {
 	    
@@ -87,7 +93,10 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     } else {
 
 		// fix for K2's weird way of working with limits and primary/secondary/links unless the user has set a lot of links
-    	JRequest::setVar('limit', $_GET["limit"] + 10);
+    	JRequest::setVar('limit', 15);
+    	
+    		if( JRequest::getVar('wxdebuglimit') )
+    			print_r( "\npost: ". JRequest::getVar("limit") );
     
     }
     
@@ -101,9 +110,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
     	$items = wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
     
-    if(!$category->image)
-    	$category->image = JURI::root()."media/com_weever/icon_live.png";
-    else 
+    if($category->image)
     	$category->image = JURI::root()."media/k2/categories/".$category->image;
     
     $feed 					= new R3SChannelMap;

@@ -59,8 +59,6 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 				$v->locimage = JURI::root().$vv->src;
 		}
 	*/
-		if(!$v->locimage)
-			$v->locimage = JURI::root()."media/com_weever/icon_live.png";
 		
 		$feedItem = new R3SItemMap;
 		

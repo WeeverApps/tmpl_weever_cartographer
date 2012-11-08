@@ -46,9 +46,6 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	{
 	
 		$items = $this->getItems();
-		
-		if(!$this->category->image)
-			$this->category->image = JURI::root()."media/com_weever/icon_live.png";
 			
 		else 
 		{
@@ -65,9 +62,6 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	{ 
 	
 		$items = $this->items;
-		
-		if( !$this->category->getParams()->get('image') )
-			$this->category->image = JURI::root()."media/com_weever/icon_live.png";
 			
 		else 
 		{
@@ -130,9 +124,6 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 				$v->image = JURI::root().$vv->src;
 				
 		}
-		
-		if(!$v->image)
-			$v->image = JURI::root()."media/com_weever/icon_live.png";
 	
 		$v->text = "";
 		

@@ -47,10 +47,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 		$items = $this->getItems();
 		
-		if(!$this->category->image)
-			$this->category->image = JURI::root()."media/com_weever/icon_live.png";
-			
-		else 
+		if($this->category->image)
 		{
 		
 			if( strstr($this->category->image, "/") )
@@ -66,10 +63,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 		$items = $this->items;
 		
-		if(!$this->category->getParams()->get('image'))
-			$this->category->image = JURI::root()."media/com_weever/icon_live.png";
-			
-		else 
+		if($this->category->getParams()->get('image'))
 		{
 		
 			if( strstr($this->category->getParams()->get('image'), "/") )
@@ -126,9 +120,6 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			if($vv->src)
 				$v->image = JURI::root().$vv->src;
 		}
-		
-		if(!$v->image)
-			$v->image = JURI::root()."media/com_weever/icon_live.png";
 		
 		$feedItem = new R3SItemMap;
 		

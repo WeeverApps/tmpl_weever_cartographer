@@ -349,9 +349,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 					$jsonHtml->image["mobile"] = JURI::root().$vv->src;
 			}
 		}
-		
-		if(!$jsonHtml->image["mobile"])
-			$jsonHtml->image["mobile"] = JURI::root()."media/com_weever/icon_live.png";
+
 	}
 	
 	// Mask external links so we leave only internal ones to play with.
