@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.6.4.1
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -357,7 +357,7 @@ if(JRequest::getVar("geotag") == true)
 {
 
 	$_com = "com_content";
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 	$geoArray = array();
 	
 	$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".

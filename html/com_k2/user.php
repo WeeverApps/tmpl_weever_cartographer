@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
 if( JRequest::getVar('wxdebug') )
 	ini_set('error_reporting', E_ALL);
 	
-$user 	= &JFactory::getUser();
+$user 	= JFactory::getUser();
 	
 if( JRequest::getVar('wxUserFeed') )
 {

@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.8
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -291,7 +291,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$jsonHtml->uuid 		= $this->item->id;
 	$jsonHtml->url 			= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	
-	$db 		= &JFactory::getDBO();					
+	$db 		= JFactory::getDBO();					
 	$query 		= "SELECT * FROM #__k2_extra_fields";
 	
 	$db->setQuery($query);
@@ -406,7 +406,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	if(wxGeotag::isLegacy() == true) 
 	{			
 	
-		$db = &JFactory::getDBO();					
+		$db = JFactory::getDBO();					
 		$query = "SELECT * FROM #__k2_extra_fields_groups";
 		$db->setQuery($query);
 		$fields = $db->loadObjectList();

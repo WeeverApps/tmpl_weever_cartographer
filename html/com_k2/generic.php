@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.6.4.2
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -37,9 +37,9 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php');
 
 	$lang =& JFactory::getLanguage();
-    $mainframe = &JFactory::getApplication();
+    $mainframe = JFactory::getApplication();
     $model = &$this->getModel('itemlist');
-    $params = &JComponentHelper::getParams('com_k2');
+    $params = JComponentHelper::getParams('com_k2');
     
     $ordering = $params->get('tagOrdering');
     

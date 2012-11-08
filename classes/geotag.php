@@ -28,7 +28,7 @@ class wxGeotag {
 
 	public static function getGeoData($items, $_com = "com_content", &$gps = false, &$geoArray) {
 		
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$order = " "; $distance = " ";
 		$itemIds = array();
 		
@@ -191,7 +191,7 @@ class wxGeotag {
 
 	public static function isLegacy() {
 	
-		$db = &JFactory::getDBO();					
+		$db = JFactory::getDBO();					
 		$query = "SELECT * FROM #__k2_extra_fields_groups WHERE name = ".$db->Quote("geo");
 		$db->setQuery($query);
 		$results = @$db->loadObjectList();

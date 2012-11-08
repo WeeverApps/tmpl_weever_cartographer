@@ -35,7 +35,7 @@ if( !class_exists('simple_html_dom_node') )
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'r3s.php');
 
 
-	$mainframe = &JFactory::getApplication();
+	$mainframe = JFactory::getApplication();
 	$lang =& JFactory::getLanguage();
 	$items = $this->items;
 	

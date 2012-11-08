@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter (rob@weeverapps.com)
-*	Version: 	1.6.4
+*	Version: 	1.9
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -22,6 +22,10 @@
 */
 
 defined('_JEXEC') or die();
+
+# Joomla 3.0 nonsense
+if( !defined('DS') )
+	define( 'DS', DIRECTORY_SEPARATOR );
 
 if( JRequest::getVar('wxdebug') )
 	ini_set('error_reporting', E_ALL);

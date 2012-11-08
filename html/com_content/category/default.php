@@ -36,7 +36,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
 
-	$mainframe = &JFactory::getApplication();
+	$mainframe = JFactory::getApplication();
 	$lang =& JFactory::getLanguage();
 	
 	$version = new JVersion;

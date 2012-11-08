@@ -36,11 +36,11 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'wxtags.php');
 require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php');
 
-	$lang 			= &JFactory::getLanguage();
-    $document 		= &JFactory::getApplication();
+	$lang 			= JFactory::getLanguage();
+    $document 		= JFactory::getApplication();
     $model 			= &$this->getModel('itemlist');
-    $params 		= &JComponentHelper::getParams('com_k2');
-    $category 		= &JTable::getInstance('K2Category', 'Table');
+    $params 		= JComponentHelper::getParams('com_k2');
+    $category 		= JTable::getInstance('K2Category', 'Table');
     $id 			= JRequest::getInt('id');
 
     JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'tables');
@@ -52,7 +52,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     if ( $cparams->get('inheritFrom') ) 
     {
-        $masterCategory = &JTable::getInstance('K2Category', 'Table');
+        $masterCategory = JTable::getInstance('K2Category', 'Table');
         $masterCategory->load($cparams->get('inheritFrom'));
         $cparams = new JParameter($masterCategory->params);
     }
@@ -61,7 +61,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $ordering = $params->get('catOrdering');
     
-    $db 		= &JFactory::getDBO();					
+    $db 		= JFactory::getDBO();					
     $query 		= "SELECT * FROM #__k2_extra_fields";
     
     $db->setQuery($query);
