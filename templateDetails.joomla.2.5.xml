@@ -19,4 +19,9 @@
             <folder>classes</folder>
     </files>
     <positions />
+    <updateservers>
+    
+    	<server type="collection">http://weeverapps.com/download_files/weever_appbuilder.xml</server>
+    	
+    </updateservers>
 </extension>
