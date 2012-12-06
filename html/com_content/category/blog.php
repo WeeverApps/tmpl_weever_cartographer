@@ -117,8 +117,19 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		
 		foreach(@$html->find('img') as $vv)
 		{
-			if($vv->src)
-				$v->image = JURI::root().$vv->src;
+			if($vv->src){
+			
+				if (strpos( $vv->src, "http://" ) !== false || strpos( $vv->src, "https://" ) !== false) {
+					
+					$v->image = $vv->src;
+					
+				} else {
+					
+					$v->image = JURI::root().$vv->src;
+					
+				}
+				
+			}
 		}
 		
 		$feedItem = new R3SItemMap;
