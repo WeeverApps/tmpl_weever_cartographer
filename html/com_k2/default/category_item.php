@@ -5,7 +5,7 @@
 *	(c) 2010-2012 Weever Apps Inc. <http://www.weeverapps.com/>
 *
 *	Author: 	Robert Gerald Porter <rob@weeverapps.com>
-*	Version: 	1.9
+*	Version: 	1.9.1
 *   License: 	GPL v3.0
 *
 *   This extension is free software: you can redistribute it and/or modify
@@ -21,17 +21,19 @@
 *
 */
 
-$v->image = null;
+$item_model 	= $this->getModel('item');
+$v 				= $item_model->prepareItem($v, "itemlist", "category");
+$v->image 		= null;
 
 if(JFile::exists(JPATH_SITE.DS.'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5("Image".$v->id).'_XS.jpg'))
-{
 	$v->image = JURI::root().'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5('Image'.$v->id)."_XS.jpg";
-}	
+	
 else
 {
 
 	if( class_exists('SimpleHTMLDomHelper') )
 		$html = SimpleHTMLDomHelper::str_get_html($v->introtext);
+		
 	else {
 	
 		if( function_exists('str_get_html') )
@@ -43,23 +45,20 @@ else
 	
 	foreach(@$html->find('img') as $vv)
 	{
-		if($vv->src)
-		{
-			if(strstr($vv->src, "http://"))
-				$v->image = $vv->src;
-			else
-				$v->image = JURI::root().$vv->src;
-			
-		}
+		if(!$vv->src)
+			continue;
+		
+		if(strstr($vv->src, "http://"))
+			$v->image = $vv->src;
+		else
+			$v->image = JURI::root().$vv->src;
+		
 	}
 }
 
-$v->introtext = "";
-
-$feedItem = new R3SItemMap;
-
-$itemExtraFields = json_decode($v->extra_fields);
-
+$v->introtext 			= "";
+$feedItem 				= new R3SItemMap;
+$itemExtraFields 		= json_decode($v->extra_fields);
 $feedItem->properties	= new StdClass();
 
 if ($itemExtraFields) {
@@ -95,8 +94,10 @@ if(count(@$v->tags))
 
 	foreach ($v->tags as $key=>$tag)
 	{
+	
 		$feedItem->tags[$key]["name"] = $tag->name;
 		$feedItem->tags[$key]["link"] = JURI::root().$tag->link;
+		
 	}
 
 }

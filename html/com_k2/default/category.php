@@ -135,7 +135,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     {
     	$i++;
     	
-    	if( JRequest::getVar("latitude") && $i > 25 )
+    	if( JRequest::getVar("latitude") && $i > 25 && !JRequest::getVar("nolimit") )
     		continue;
     		
     	include('category_item.php');     
