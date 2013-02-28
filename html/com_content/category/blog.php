@@ -36,18 +36,18 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . 'geotag.php';
 
 
-	$mainframe = JFactory::getApplication();
-	$lang =& JFactory::getLanguage();
+	$mainframe 		= JFactory::getApplication();
+	$lang 			= JFactory::getLanguage();
 	
-	$version = new JVersion;
-	$joomla = $version->getShortVersion();
+	$version 		= new JVersion;
+	$joomla 		= $version->getShortVersion();
 	
-	if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
+	if( substr($joomla,0,3) == '1.5' )  // ### 1.5 only
 	{
 	
 		$items = $this->getItems();
 		
-		if($this->category->image)
+		if( $this->category->image )
 		{
 		
 			if( strstr($this->category->image, "/") )
@@ -63,13 +63,13 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 		$items = $this->items;
 		
-		if($this->category->getParams()->get('image'))
+		if( $catImage = $this->category->getParams()->get('image') )
 		{
 		
-			if( strstr($this->category->getParams()->get('image'), "/") )
-				$this->category->image = JURI::root().$this->category->getParams()->get('image');
+			if( strstr($catImage, "/") )
+				$this->category->image = JURI::root().$catImage;
 			else 
-				$this->category->image = JURI::root()."images/stories/".$this->category->getParams()->get('image');
+				$this->category->image = JURI::root().$catImage;
 				
 		}
 		
@@ -77,25 +77,54 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	$geoArray = array();	$gps = false;
 	
-	if( JRequest::getVar("geotag") == true && substr($joomla,0,3) != '1.5')
+	if( JRequest::getVar("geotag") == true && substr($joomla,0,3) != '1.5' )
 		$items = wxGeotag::getGeoData($items, "com_content", $gps, $geoArray);
 	
 	$feed = new R3SChannelMap;
 	
-	$feed->count = count($items);
-	$feed->thisPage = 1;
-	$feed->lastPage = 1;
-	$feed->language = @$lang->_default;
-	$feed->sort = "normal";
-	$feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
-	$feed->description = $this->category->description;
-	$feed->image["mobile"] = $this->category->image;
-	$feed->image["full"] = $this->category->image;
-	$feed->name = $this->params->get('page_title');
-	$feed->items = array();
+	$feed->count 			= count($items);
+	$feed->thisPage 		= 1;
+	$feed->lastPage 		= 1;
+	$feed->language 		= @$lang->_default;
+	$feed->sort 			= "normal";
+	$feed->url 				= JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
+	$feed->description 		= $this->category->description;
+	$feed->image["mobile"] 	= isset($this->category->image) ? $this->category->image : "";
+	$feed->image["full"] 	= isset($this->category->image) ? $this->category->image : "";
+	$feed->name 			= $this->params->get('page_title');
+	$feed->items 			= array();
 	
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
 	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
+	
+	if( substr($joomla,0,3) != '1.5' ) 
+	{
+	
+		if( JRequest::getVar("wxdebug") )
+			print_r( $this->children[$this->category->id] );
+	
+		foreach( (array) $this->children[$this->category->id] as $k=>$v )
+		{
+		
+			$feedItem = new R3SItemMap;
+			
+			$feedImage = $v->getParams()->get('image');
+		
+			$feedItem->type 					= "channel";
+			$feedItem->description 				= $v->description;
+			$feedItem->name 					= $v->title;
+			$feedItem->datetime["published"] 	= $v->created;
+			$feedItem->datetime["modified"] 	= $v->modified;
+			$feedItem->images[] 				= $feedImage ? JURI::root() . $feedImage : "";
+			$feedItem->url 						= JURI::root()."index.php?option=com_content&view=category&template=weever_cartographer&id=".$v->id;
+			$feedItem->author 					= $mainframe->getCfg('sitename');
+			$feedItem->publisher 				= $mainframe->getCfg('sitename');
+			
+			$feed->items[] = $feedItem;		
+		
+		}	
+	
+	}
 		 
 	foreach( (array) $items as $k=>$v )
 	{
@@ -134,19 +163,20 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		
 		$feedItem = new R3SItemMap;
 		
-		$feedItem->type = "htmlContent";
-		$feedItem->description = "";
-		$feedItem->name = $v->title;
-		$feedItem->datetime["published"] = $v->created;
-		$feedItem->datetime["modified"] = $v->modified;
-		$feedItem->image["mobile"] = $v->image;
-		$feedItem->image["full"] = $v->image;
-		$feedItem->url = JURI::root()."index.php?option=com_content&view=article&id=".$v->id;
-		$feedItem->author = $v->created_by;
-		$feedItem->publisher = $mainframe->getCfg('sitename');
+		$feedItem->type 					= "htmlContent";
+		$feedItem->description 				= "";
+		$feedItem->name 					= $v->title;
+		$feedItem->datetime["published"]	= $v->created;
+		$feedItem->datetime["modified"] 	= $v->modified;
+		$feedItem->image["mobile"] 			= $v->image;
+		$feedItem->image["full"] 			= $v->image;
+		$feedItem->url	 					= JURI::root()."index.php?option=com_content&view=article&id=".$v->id;
+		$feedItem->author 					= $v->created_by;
+		$feedItem->publisher 				= $mainframe->getCfg('sitename');
 		
 		if( isset($geoArray[$v->id]) && !$gps )
 			$feedItem->geo = $geoArray[$v->id];
+			
 		elseif( $gps )
 			$feedItem->geo = $geoArray[$k];
 		
@@ -161,9 +191,8 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	header('Content-type: application/json');				
 	header('Cache-Control: no-cache, must-revalidate');
 	
-	$callback = JRequest::getVar('callback');		
-
-	$json = json_encode($feed);
+	$callback 	= JRequest::getVar('callback');		
+	$json 		= json_encode($feed);
 	
 	if($callback)
 		$json = $callback . "(". $json .")";

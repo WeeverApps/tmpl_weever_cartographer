@@ -63,7 +63,7 @@ $feedItem->properties	= new StdClass();
 
 if ($itemExtraFields) {
 
-	foreach ( $itemExtraFields as $key=>$extraField )
+	foreach( (array) $itemExtraFields as $key=>$extraField )
 	{
 	
 		if( !isset( $extraField->value) || !isset( $extraField->id) || empty($extraFields) )
