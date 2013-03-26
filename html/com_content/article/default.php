@@ -55,7 +55,7 @@ $lang =& JFactory::getLanguage();
 
 $jsonHtml = new R3SHtmlContentDetailsMap;
 
-$jsonHtml->language = @$lang->_default; // sometimes error?
+$jsonHtml->language = isset($lang->_default) ? $lang->_default : null; // sometimes error?
 $jsonHtml->publisher = $conf->getValue('config.sitename');
 
 $version = new JVersion;

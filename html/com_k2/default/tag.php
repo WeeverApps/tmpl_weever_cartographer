@@ -67,7 +67,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $feed->count = count($items);
     $feed->thisPage = 1;
     $feed->lastPage = 1;
-    $feed->language = $lang->_default;
+    $feed->language = isset($lang->_default) ? $lang->_default : null;
     $feed->sort = $ordering;
     $feed->url = JURI::root()."index.php?".$_SERVER['QUERY_STRING'];
     $feed->description = "test";
