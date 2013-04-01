@@ -182,6 +182,8 @@ if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
 	
 	// For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 	$jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
+	
+	$jsonHtml->html = str_replace("href=\"".JURI::base(true)."/", "href=\"", $jsonHtml->html);
 	$jsonHtml->html = str_replace("href=\"", "target=\"_blank\" href=\"".JURI::root(), $jsonHtml->html);
 	$jsonHtml->html = str_replace("src=\"/", "src=\"".JURI::root(), $jsonHtml->html);
 	$jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $jsonHtml->html);
@@ -413,6 +415,8 @@ $jsonHtml->html = str_replace("href=\"sms:", "hrefmask=\"weeversms:", $jsonHtml-
 
 // For HTML5 compliance, we take out spare target="_blank" links just so we don't duplicate
 $jsonHtml->html = str_replace("target=\"_blank\"", "", $jsonHtml->html);
+
+$jsonHtml->html = str_replace("href=\"".JURI::base(true)."/", "href=\"", $jsonHtml->html);
 $jsonHtml->html = str_replace("href=\"", "target=\"_blank\" href=\"".JURI::root(), $jsonHtml->html);
 $jsonHtml->html = str_replace("src=\"/", "src=\"".JURI::root(), $jsonHtml->html);
 $jsonHtml->html = str_replace("src=\"images", "src=\"".JURI::root()."images", $jsonHtml->html);
