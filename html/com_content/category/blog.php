@@ -146,7 +146,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		
 		foreach(@$html->find('img') as $vv)
 		{
-			if(!$v->image && $vv->src){
+			if($vv->src){
 			
 				if (strpos( $vv->src, "http://" ) !== false || strpos( $vv->src, "https://" ) !== false) {
 					
@@ -157,6 +157,8 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 					$v->image = JURI::root().$vv->src;
 					
 				}
+				
+				break;
 				
 			}
 		}
