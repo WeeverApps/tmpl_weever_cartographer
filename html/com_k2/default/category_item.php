@@ -83,6 +83,7 @@ $feedItem->datetime["published"] = $v->created;
 $feedItem->datetime["modified"] = $v->modified;
 $feedItem->image["mobile"] 		= $v->image;
 $feedItem->image["full"] 		= $v->image;
+$feedItem->uuid					= base64_encode( $document->getCfg('sitename') ) . "-k2-" . $v->id;
 $feedItem->url 					= JURI::root()."index.php?option=com_k2&view=item&id=".$v->id;
 $feedItem->author 				= @$v->author->name; // check to see if this exists someday
 $feedItem->publisher 			= $document->getCfg('sitename');

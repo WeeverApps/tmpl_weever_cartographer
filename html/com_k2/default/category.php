@@ -107,8 +107,12 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     $geoArray = array();	$gps = false;
     
-    if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
-    	$items = wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
+    if( JRequest::getVar("latitude") && JRequest::getVar("longitude") ) {
+    
+    	$gps 	= true;
+    	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
+    	
+    }
     
     if($category->image)
     	$category->image = JURI::root()."media/k2/categories/".$category->image;

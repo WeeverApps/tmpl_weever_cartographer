@@ -58,10 +58,18 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
 	    
 	     JRequest::setVar('limit', 150);
-    }
-   
+    }   
     
     $items = $model->getData($ordering);
+    
+    $geoArray = array();	$gps = false;
+    
+    if( JRequest::getVar("latitude") && JRequest::getVar("longitude") ) {
+    
+    	$gps 	= true;
+    	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
+    	
+    }
     
     $feed = new R3SChannelMap;
     $feed->count = count($items);
