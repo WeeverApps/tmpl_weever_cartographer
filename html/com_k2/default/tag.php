@@ -68,7 +68,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     
     	$gps 	= true;
     	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
-    	
+
     }
     
     $feed = new R3SChannelMap;

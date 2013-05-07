@@ -104,6 +104,13 @@ class wxGeotag {
 			
 		}
 		
+		foreach( (array) $geoArray as $k=>$v ) {
+		
+			if( $v->marker[0] == "\\" || $v->marker[0] == "/" )
+				$v->marker = JURI::root() . $v->marker;
+		
+		}
+		
 		if(JRequest::getVar("wxdebug"))
 		{
 			print_r($items);
@@ -111,6 +118,8 @@ class wxGeotag {
 			echo $query;
 			echo $distance;
 			echo "Lat: ".$latitude;
+			echo "\n\nTEST";
+			print_r($geoArray);
 			jexit();
 		}
 			
@@ -150,15 +159,14 @@ class wxGeotag {
 			
 		}
 		
-		if(JRequest::getVar("wxdebug"))
+		if(JRequest::getVar("wxdebugk2"))
 		{
 			print_r($item->plugins);
 			echo "\n\n";
 			print_r($geoData);
 			jexit();
 		}
-		
-		
+
 		if(!$geoData->weevermapsk2latitude_item)
 			return false;
 			
@@ -168,9 +176,11 @@ class wxGeotag {
 		$geoLabelArray = 	explode( 	";", rtrim( $geoData->weevermapsk2label_item, 		";") 	);
 		$geoMarkerArray = 	explode( 	";", rtrim( $geoData->weevermapsk2marker_item, 		";") 	);
 
-		
 		foreach ( (array) $geoLatArray as $key=>$value )
 		{
+		
+			if( @substr($geoMarkerArray[$key], 0, 1) == "\\" || @substr($geoMarkerArray[$key], 0, 1) == "/" )
+				$geoMarkerArray[$key] = JURI::root() . $geoMarkerArray[$key]; 
 		
 			$feedItem->geo[$key][$extraFieldsFields[0]] = @$geoLatArray[$key];
 			$feedItem->geo[$key][$extraFieldsFields[1]] = @$geoLongArray[$key];
@@ -229,7 +239,7 @@ class wxGeotag {
 				
 		}
 		
-		if(JRequest::getVar("wxdebug"))
+		if(JRequest::getVar("wxdebugk2"))
 		{
 			print_r($extraFields);
 			jexit();
