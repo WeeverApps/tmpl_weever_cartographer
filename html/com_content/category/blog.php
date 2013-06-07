@@ -119,6 +119,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 			$feedItem->url 						= JURI::root()."index.php?option=com_content&view=category&template=weever_cartographer&id=".$v->id;
 			$feedItem->author 					= $mainframe->getCfg('sitename');
 			$feedItem->publisher 				= $mainframe->getCfg('sitename');
+			$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
 			
 			$feed->items[] = $feedItem;		
 		
@@ -175,6 +176,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem->url	 					= JURI::root()."index.php?option=com_content&view=article&id=".$v->id;
 		$feedItem->author 					= $v->created_by;
 		$feedItem->publisher 				= $mainframe->getCfg('sitename');
+		$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
 		
 		if( isset($geoArray[$v->id]) && !$gps )
 			$feedItem->geo = $geoArray[$v->id];

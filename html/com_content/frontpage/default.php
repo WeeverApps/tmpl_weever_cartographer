@@ -95,16 +95,17 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		
 		$feedItem = new R3SItemMap;
 		
-		$feedItem->type = "htmlContent";
-		$feedItem->description = "";
-		$feedItem->name = $v->title;
-		$feedItem->datetime["published"] = $v->created;
-		$feedItem->datetime["modified"] = $v->modified;
-		$feedItem->image["mobile"] = $v->image;
-		$feedItem->image["full"] = $v->image;
-		$feedItem->url = JURI::root()."index.php?option=com_content&view=article&id=".$v->id;
-		$feedItem->author = $v->created_by;
-		$feedItem->publisher = $mainframe->getCfg('sitename');
+		$feedItem->type 					= "htmlContent";
+		$feedItem->description 				= "";
+		$feedItem->name 					= $v->title;
+		$feedItem->datetime["published"] 	= $v->created;
+		$feedItem->datetime["modified"] 	= $v->modified;
+		$feedItem->image["mobile"] 			= $v->image;
+		$feedItem->image["full"] 			= $v->image;
+		$feedItem->url 						= JURI::root()."index.php?option=com_content&view=article&id=".$v->id;
+		$feedItem->author 					= $v->created_by;
+		$feedItem->publisher 				= $mainframe->getCfg('sitename');
+		$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
 		
 		$feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 		$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);
