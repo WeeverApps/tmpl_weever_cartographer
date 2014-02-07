@@ -42,42 +42,22 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$version 		= new JVersion;
 	$joomla 		= $version->getShortVersion();
 	
-	if( substr($joomla,0,3) == '1.5' )  // ### 1.5 only
+
+	$items = $this->items;
+	
+	if( $catImage = $this->category->getParams()->get('image') )
 	{
 	
-		$items = $this->getItems();
-		
-		if( $this->category->image )
-		{
-		
-			if( strstr($this->category->image, "/") )
-				$this->category->image = JURI::root().$this->category->image;
-			else 
-				$this->category->image = JURI::root()."images/stories/".$this->category->image;
-				
-		}
-		
-	}
-	else
-	{ 
-	
-		$items = $this->items;
-		
-		if( $catImage = $this->category->getParams()->get('image') )
-		{
-		
-			if( strstr($catImage, "/") )
-				$this->category->image = JURI::root().$catImage;
-			else 
-				$this->category->image = JURI::root().$catImage;
-				
-		}
-		
+		if( strstr($catImage, "/") )
+			$this->category->image = JURI::root().$catImage;
+		else 
+			$this->category->image = JURI::root().$catImage;
+			
 	}
 	
 	$geoArray = array();	$gps = false;
 	
-	if( JRequest::getVar("geotag") == true && substr($joomla,0,3) != '1.5' )
+	if( JRequest::getVar("geotag") == true )
 		$items = wxGeotag::getGeoData($items, "com_content", $gps, $geoArray);
 	
 	$feed = new R3SChannelMap;
@@ -96,36 +76,29 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
 	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
-	
-	if( substr($joomla,0,3) != '1.5' ) 
+
+	foreach( (array) $this->children[$this->category->id] as $k=>$v )
 	{
 	
-		if( JRequest::getVar("wxdebug") )
-			print_r( $this->children[$this->category->id] );
+		$feedItem = new R3SItemMap;
+		
+		$feedImage = $v->getParams()->get('image');
 	
-		foreach( (array) $this->children[$this->category->id] as $k=>$v )
-		{
+		$feedItem->type 					= "channel";
+		$feedItem->description 				= $v->description;
+		$feedItem->name 					= $v->title;
+		$feedItem->datetime["published"] 	= $v->created;
+		$feedItem->datetime["modified"] 	= $v->modified;
+		$feedItem->images[] 				= $feedImage ? JURI::root() . $feedImage : "";
+		$feedItem->url 						= JURI::root()."index.php?option=com_content&view=category&template=weever_cartographer&id=".$v->id;
+		$feedItem->author 					= $mainframe->getCfg('sitename');
+		$feedItem->publisher 				= $mainframe->getCfg('sitename');
+		$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
 		
-			$feedItem = new R3SItemMap;
-			
-			$feedImage = $v->getParams()->get('image');
-		
-			$feedItem->type 					= "channel";
-			$feedItem->description 				= $v->description;
-			$feedItem->name 					= $v->title;
-			$feedItem->datetime["published"] 	= $v->created;
-			$feedItem->datetime["modified"] 	= $v->modified;
-			$feedItem->images[] 				= $feedImage ? JURI::root() . $feedImage : "";
-			$feedItem->url 						= JURI::root()."index.php?option=com_content&view=category&template=weever_cartographer&id=".$v->id;
-			$feedItem->author 					= $mainframe->getCfg('sitename');
-			$feedItem->publisher 				= $mainframe->getCfg('sitename');
-			$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
-			
-			$feed->items[] = $feedItem;		
-		
-		}	
+		$feed->items[] = $feedItem;		
 	
-	}
+	}	
+	
 		 
 	foreach( (array) $items as $k=>$v )
 	{

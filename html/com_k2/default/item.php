@@ -41,7 +41,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$jsonHtml = new R3SHtmlContentDetailsMap;
 	
 	$jsonHtml->language = @$lang->_default;
-	$jsonHtml->publisher = $conf->getValue('config.sitename');
+	//$jsonHtml->publisher = $conf->getValue('config.sitename');
 	
 	$document =& JFactory::getDocument();
 	header('Content-type: application/json');

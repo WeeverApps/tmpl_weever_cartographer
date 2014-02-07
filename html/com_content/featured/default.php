@@ -45,7 +45,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	$geoArray = array();	$gps = false;	
 	
-	if( JRequest::getVar("geotag") == true && substr($joomla,0,3) != '1.5')
+	if( JRequest::getVar("geotag") == true )
 		$items = wxGeotag::getGeoData($items, "com_content", $gps, $geoArray);
 	
 	$feed = new R3SChannelMap;

@@ -47,7 +47,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$callback = JRequest::getVar('callback');
 	
 	$conf =& JFactory::getConfig();
-	$jsonHtml->publisher = $conf->getValue('config.sitename');
+//	$jsonHtml->publisher = $conf->getValue('config.sitename');
 	
 	$jsonHtml = new R3SHtmlContentDetailsMap;
 	$jsonHtml->html = $this->getBuffer('component');
@@ -81,5 +81,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$json = $output;
 	
 	print_r($json);
+
+	//echo $this->getBuffer('component');
 	
 	jexit();

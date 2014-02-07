@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.5/template-install.dtd">
-<install version="1.5" type="template" method="upgrade">
+<!DOCTYPE install PUBLIC "-//Joomla! 1.6//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.6/template-install.dtd">
+<extension version="2.5" type="template" method="upgrade">
+    
     <name>Weever_Cartographer</name>
-    <creationDate>2011-11-08</creationDate>
+    <creationDate>2014-02-07</creationDate>
     <author>Robert Gerald Porter</author>
     <authorEmail>rob@weeverapps.com</authorEmail>
     <authorUrl>http://www.weeverapps.com/</authorUrl>
-    <copyright>(c) 2010-2012 Weever Apps Inc.</copyright>
+    <copyright>(c) 2010-2014 Weever Apps Inc.</copyright>
     <license>GPLv3</license>
-    <version>1.9</version>
+    <version>2.0</version>
     <description>Weever Cartographer R3S Template for Joomla</description>
+    
     <files>
+
             <filename>index.php</filename>
             <filename>index.html</filename>
-            <filename>templateDetails.xml</filename>
-            <folder>html</folder>
             <folder>simpledom</folder>
+            <folder>html</folder>
+            <filename>templateDetails.xml</filename>
             <folder>classes</folder>
+
     </files>
     <positions />
-</install>
+
+</extension>

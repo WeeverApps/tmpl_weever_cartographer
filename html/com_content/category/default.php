@@ -42,33 +42,17 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$version = new JVersion;
 	$joomla = $version->getShortVersion();
 	
-	if(substr($joomla,0,3) == '1.5')  // ### 1.5 only
-	{
-	
-		$items = $this->getItems();
+	$items = $this->items;
 
-		if( strstr($this->category->image, "/") )
-			$this->category->image = JURI::root().$this->category->image;
-		else 
-			$this->category->image = JURI::root()."images/stories/".$this->category->image;
-
-	}
-	else // 1.6+
-	{ 
-	
-		$items = $this->items;
-
-		if( strstr( $this->category->getParams()->get('image'), "/" ) )
-			$this->category->image = JURI::root().$this->category->getParams()->get('image');
-			
-		else 
-			$this->category->image = JURI::root()."images/stories/".$this->category->getParams()->get('image');
+	if( strstr( $this->category->getParams()->get('image'), "/" ) )
+		$this->category->image = JURI::root().$this->category->getParams()->get('image');
 		
-	}
+	else 
+		$this->category->image = JURI::root()."images/stories/".$this->category->getParams()->get('image');
 	
 	$geoArray = array();	$gps = false;
 	
-	if( JRequest::getVar("geotag") == true && substr($joomla,0,3) != '1.5' )
+	if( JRequest::getVar("geotag") == true )
 		$items = wxGeotag::getGeoData($items, "com_content", $gps, $geoArray);
 		
 	$feed = new R3SChannelMap;
@@ -87,33 +71,29 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	$feed->url = str_replace("?template=weever_cartographer","",$feed->url);
 	$feed->url = str_replace("&template=weever_cartographer","",$feed->url);
-	
-	if(substr($joomla,0,3) != '1.5') 
+
+	if( JRequest::getVar("wxdebug") )
+		print_r( $this->children );
+
+	foreach( (array) $this->children as $k=>$v )
 	{
 	
-		if( JRequest::getVar("wxdebug") )
-			print_r( $this->children );
+		$feedItem = new R3SItemMap;
 	
-		foreach( (array) $this->children as $k=>$v )
-		{
-		
-			$feedItem = new R3SItemMap;
-		
-			$feedItem->type 					= "channel";
-			$feedItem->description 				= $v->description;
-			$feedItem->name 					= $v->title;
-			$feedItem->datetime["published"] 	= "";
-			$feedItem->datetime["modified"] 	= "";
-			$feedItem->images[] 				= "";
-			$feedItem->url 						= JURI::root()."index.php?option=com_content&view=category&id=".$v->id;
-			$feedItem->author 					= $mainframe->getCfg('sitename');
-			$feedItem->publisher 				= $mainframe->getCfg('sitename');
-			$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
-		
-		
-		}	
+		$feedItem->type 					= "channel";
+		$feedItem->description 				= $v->description;
+		$feedItem->name 					= $v->title;
+		$feedItem->datetime["published"] 	= "";
+		$feedItem->datetime["modified"] 	= "";
+		$feedItem->images[] 				= "";
+		$feedItem->url 						= JURI::root()."index.php?option=com_content&view=category&id=".$v->id;
+		$feedItem->author 					= $mainframe->getCfg('sitename');
+		$feedItem->publisher 				= $mainframe->getCfg('sitename');
+		$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
 	
-	}
+	
+	}	
+	
 		 
 	foreach( (array) $items as $k=>$v )
 	{
