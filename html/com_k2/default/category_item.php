@@ -21,6 +21,9 @@
 *
 */
 
+if( !defined('DS') )
+	define( 'DS', DIRECTORY_SEPARATOR );
+
 $item_model 	= $this->getModel('item');
 $v 				= $item_model->prepareItem($v, "itemlist", "category");
 $v->image 		= null;

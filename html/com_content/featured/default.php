@@ -23,6 +23,9 @@
 
 defined('_JEXEC') or die();
 
+if( !defined('DS') )
+	define( 'DS', DIRECTORY_SEPARATOR );
+
 if( JRequest::getVar('wxdebug') )
 	ini_set('error_reporting', E_ALL);
 
