@@ -106,25 +106,9 @@ if(count(@$v->tags))
 
 }
 
-if(JRequest::getVar("geotag") == "true") 
-{
-
-	if($gps == true) 
-	{
+if(JRequest::getVar("geotag") == "true") {
 	
-		$feedItem->geo = $geoArray[$k];
-	
-	}
-	else 
-	{
-	
-		if(wxGeotag::isLegacy() == true)
-			wxGeotag::getK2LegacyGeoData($feedItem, $v);
-		else {
-			wxGeotag::getK2PluginGeoData($feedItem, $v);
-		}
-		
-	}
+	$feedItem->geo = $geoArray[$k];
 
 }
 

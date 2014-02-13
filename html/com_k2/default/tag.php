@@ -55,8 +55,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	if( JRequest::getVar("start") )
 		JRequest::setVar( "limitstart", JRequest::getVar("start") );
     
-    if(JRequest::getVar("geotag") == "true") 
-    {
+    if(JRequest::getVar("geotag") == "true") {
 
 	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
 	    
@@ -66,12 +65,17 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     $items = $model->getData($ordering);
     
     $geoArray = array();	$gps = false;
-    
-    if( JRequest::getVar("latitude") && JRequest::getVar("longitude") ) {
-    
-    	$gps 	= true;
-    	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
 
+
+    if( (bool) JRequest::getVar("geotag") ) {
+    
+        JRequest::setVar('limit', 150);
+
+        if( (JRequest::getVar("latitude") && JRequest::getVar("longitude")) )
+    	   $gps 	= true;
+
+    	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
+    	
     }
     
     $feed = new R3SChannelMap;

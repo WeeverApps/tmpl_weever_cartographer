@@ -50,14 +50,32 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 
     $category->load($id);
 
-    //Merge params
-    $cparams = new JParameter($category->params);
+    $version        = new JVersion;
+    $joomlaVersion  = substr($version->getShortVersion(), 0, 3);
+
+    if( $joomlaVersion >= 3 ) {
+
+        $cparams = new JRegistry();
+        $cparams->loadString( $category->params );
+
+    } else {
+            //Merge params
+        $cparams = new JParameter( $category->params );
+
+    }
     
-    if ( $cparams->get('inheritFrom') ) 
-    {
+    if ( $cparams->get('inheritFrom') ) {
+
         $masterCategory = JTable::getInstance('K2Category', 'Table');
         $masterCategory->load($cparams->get('inheritFrom'));
-        $cparams = new JParameter($masterCategory->params);
+
+        if( $joomlaVersion >= 3 ) {
+
+            $cparams = new JRegistry();
+            $cparams->loadString( $masterCategory->params );
+
+        } else $cparams = new JParameter( $masterCategory->params );
+
     }
     
     $params->merge($cparams);
@@ -79,40 +97,21 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     	$extraFields[$v->id] = $v->name;
     
     }
-    
-    if( JRequest::getVar('wxdebuglimit') )
-    	print_r($_GET["limit"]);
     	
     if( JRequest::getVar("start") )
     	JRequest::setVar( "limitstart", JRequest::getVar("start") );
     
-    if( JRequest::getVar("geotag") == "true" ) 
-    {
-	    
-	    $extraFieldsFields = array(0=>"latitude",1=>"longitude",2=>"altitude",3=>"address",4=>"label",5=>"marker",6=>"kml");
-
-	   	JRequest::setVar('limit', 150);
-	    
-    } else {
-
-		// fix for K2's weird way of working with limits and primary/secondary/links unless the user has set a lot of links
-    	JRequest::setVar('limit', 15);
-    	
-    		if( JRequest::getVar('wxdebuglimit') )
-    			print_r( "\npost: ". JRequest::getVar("limit") );
-    
-    }
-    
     $items = $model->getData($ordering);
-    
-    if( JRequest::getVar('wxdebug') )
-    	print_r($items);
     
     $geoArray = array();	$gps = false;
     
-    if( JRequest::getVar("latitude") && JRequest::getVar("longitude") ) {
+    if( (bool) JRequest::getVar("geotag") ) {
     
-    	$gps 	= true;
+        JRequest::setVar('limit', 150);
+
+        if( (JRequest::getVar("latitude") && JRequest::getVar("longitude")) )
+    	   $gps 	= true;
+
     	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
     	
     }

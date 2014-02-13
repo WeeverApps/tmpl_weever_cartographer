@@ -204,8 +204,7 @@ endif; ?>
 
 $jsonHtml->html =  ob_get_clean();
 
-if(JRequest::getVar("geotag") == true)
-{
+if(JRequest::getVar("geotag") == true) {
 
 	$_com = "com_content";
 	$db = JFactory::getDBO();
@@ -222,8 +221,7 @@ if(JRequest::getVar("geotag") == true)
 	$db->setQuery($query);
 	$results = $db->loadObjectList();	
 	
-	foreach( (array) $results as $k=>$v ) 
-	{
+	foreach( (array) $results as $k=>$v ) {
 	
 		wxGeotag::convertToLatLong($v);
 		unset($v->component_id);

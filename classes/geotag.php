@@ -138,34 +138,9 @@ class wxGeotag {
 		
 		if(!$item->plugins)
 			return false;
-				
-		if($joomlaVersion == '1.5')
-		{
-		
-			// K2 for Joomla 1.5 stores $item->plugin as INI string rather than JSON
-			// ... and Joomla 1.5 has its own INI parsing class, JRegistry.
-		
-			$registry	= new JRegistry();
-			$registry->loadINI($item->plugins);
-			$geoData	= $registry->toObject( );
-			
-		}
-		else 
-		{
-		
-			// K2 for Joomla 1.6+ is normal.
-		
-			$geoData = json_decode($item->plugins);
-			
-		}
-		
-		if(JRequest::getVar("wxdebugk2"))
-		{
-			print_r($item->plugins);
-			echo "\n\n";
-			print_r($geoData);
-			jexit();
-		}
+
+		$geoData = json_decode($item->plugins);
+
 
 		if(!$geoData->weevermapsk2latitude_item)
 			return false;

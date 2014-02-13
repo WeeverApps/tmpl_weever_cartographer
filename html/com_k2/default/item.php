@@ -406,52 +406,36 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	}
 		
-	if(wxGeotag::isLegacy() == true) 
-	{			
 	
-		$db = JFactory::getDBO();					
-		$query = "SELECT * FROM #__k2_extra_fields_groups";
-		$db->setQuery($query);
-		$fields = $db->loadObjectList();
+	$_com 		= "com_k2";
+	$db 		= JFactory::getDBO();
+	$geoArray 	= array();
+	
+	$query = "SELECT component_id, AsText(location) AS location, address, label, kml, marker ".
+			"FROM
+				#__weever_maps ".
+			"WHERE
+				component = ".$db->quote($_com)." 
+				AND
+				component_id = ".$this->item->id." ";
+
+	$db->setQuery($query);
+	$results = $db->loadObjectList();	
+	
+	foreach( (array) $results as $k=>$v ) {
+	
+		wxGeotag::convertToLatLong( $v );
+
+		unset($v->component_id);
+		unset($v->location);	
 		
-		$extraFieldsGroup = array();
-		
-		foreach((array)$fields as $k=>$v)
-		{
-			$extraFieldsGroup[$v->id] = $v->name;
-		}
-		
-		//$jsonHtml->geo = array(0);
-		
-		foreach ((array)$this->item->extra_fields as $key=>$extraField)
-		{
-		
-			if($extraFieldsGroup[$extraField->group] == "geo")
-			{
-				if(strpos($extraField->value, ";"))
-				{
-					$values = explode(";",$extraField->value);
-					
-					foreach((array)$values as $kk=>$vv)
-					{
-						$jsonHtml->geo[$kk][$extraField->name] = trim($vv, "\r\n");
-					}
-					
-				}
-				else 
-					$jsonHtml->geo[0][$extraField->name] = $extraField->value;
-			}
-			else
-				$jsonHtml->relationships[$extraFieldsGroup[$extraField->group]][$extraField->name] = $extraField->value;
-		}	
-		
+		$geoArray[] = $v;
+			
 	}
-	else 
-	{
 	
-		wxGeotag::getK2PluginGeoData($jsonHtml, $this->item);
-	
-	}
+	$jsonHtml->geo = $geoArray;
+
+	//wxGeotag::getK2PluginGeoData($jsonHtml, $this->item);
 	
 	$callback = JRequest::getVar('callback');
 	
