@@ -54,9 +54,12 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$this->category->image = JURI::root()."images/stories/".$this->category->getParams()->get('image');
 	
 	$geoArray = array();	$gps = false;
+
+	if( (JRequest::getVar("latitude") && JRequest::getVar("longitude")) )
+		$gps = true;
 	
 	if( JRequest::getVar("geotag") == true )
-		$items = wxGeotag::getGeoData($items, "com_content", $gps, $geoArray);
+		$items = wxGeotag::getGeoData( $items, "com_content", $gps, $geoArray );
 		
 	$feed = new R3SChannelMap;
 	
@@ -98,8 +101,7 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	}	
 	
 		 
-	foreach( (array) $items as $k=>$v )
-	{
+	foreach( (array) $items as $k=>$v ) {
 	
 		$v->image = null;
 		
@@ -152,11 +154,8 @@ require_once JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 		$feedItem->publisher 				= $mainframe->getCfg('sitename');
 		$feedItem->uuid						= base64_encode( $mainframe->getCfg('sitename') ) . "-content-" . $v->id;
 		
-		if( isset($geoArray[$v->id]) && !$gps )
+		if( isset($geoArray[$v->id]) )
 			$feedItem->geo 	= $geoArray[$v->id];
-			
-		elseif( $gps )
-			$feedItem->geo 	= $geoArray[$k];
 		
 		$feedItem->url = str_replace("?template=weever_cartographer","",$feedItem->url);
 		$feedItem->url = str_replace("&template=weever_cartographer","",$feedItem->url);

@@ -71,7 +71,7 @@ class wxGeotag {
 			
 			// make geo markers unique when sorting by distance
 			
-			if($gps == true)
+			if( $gps == true )
 				$geoArrayUnique[] = $v;
 			else 
 				$geoArray[$v->component_id][] = $v;
@@ -79,7 +79,7 @@ class wxGeotag {
 		}
 		
 		
-		if($gps == true) {
+		if( $gps == true ) {
 		
 			$contentItems = $items;
 			$items = array();
@@ -92,11 +92,11 @@ class wxGeotag {
 				
 				$i++;
 				
-				$items[$i] = $contentItems[ $itemKeys[$v->component_id] ];
-				$geoArray[$i] = $v;
+				$items[$i] 						= $contentItems[ $itemKeys[$v->component_id] ];
+				$geoArray[$v->component_id] 	= $v;
 				
-				unset($geoArray[$i]->component_id);
-				unset($geoArray[$i]->location);
+				unset($geoArray[$v->component_id]->component_id);
+				unset($geoArray[$v->component_id]->location);
 			
 			}
 			

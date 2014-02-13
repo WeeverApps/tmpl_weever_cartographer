@@ -101,16 +101,16 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     if( JRequest::getVar("start") )
     	JRequest::setVar( "limitstart", JRequest::getVar("start") );
     
-    $items = $model->getData($ordering);
-    
-    $geoArray = array();	$gps = false;
+    $items      = $model->getData($ordering);
+    $geoArray   = array();	
+    $gps        = false;
     
     if( (bool) JRequest::getVar("geotag") ) {
     
         JRequest::setVar('limit', 150);
 
         if( (JRequest::getVar("latitude") && JRequest::getVar("longitude")) )
-    	   $gps 	= true;
+    	   $gps = true;
 
     	$items 	= wxGeotag::getGeoData( $items, "com_k2", $gps, $geoArray );
     	
@@ -138,7 +138,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	$i = 0;
 	        
 	foreach( (array) $items as $k=>$v ) {
-        
+
     	$i++;
     	
     	if( JRequest::getVar("latitude") && $i > 25 && !JRequest::getVar("nolimit") )
