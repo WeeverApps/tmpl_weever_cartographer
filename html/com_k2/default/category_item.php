@@ -31,8 +31,7 @@ $v->image 		= null;
 if(JFile::exists(JPATH_SITE.DS.'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5("Image".$v->id).'_XS.jpg'))
 	$v->image = JURI::root().'media'.DS.'k2'.DS.'items'.DS.'cache'.DS.md5('Image'.$v->id)."_XS.jpg";
 	
-else
-{
+else {
 
 	if( class_exists('SimpleHTMLDomHelper') )
 		$html = SimpleHTMLDomHelper::str_get_html($v->introtext);
@@ -46,8 +45,7 @@ else
 		
 	}
 	
-	foreach(@$html->find('img') as $vv)
-	{
+	foreach(@$html->find('img') as $vv)	{
 		if(!$vv->src)
 			continue;
 		
@@ -66,8 +64,7 @@ $feedItem->properties	= new StdClass();
 
 if ($itemExtraFields) {
 
-	foreach( (array) $itemExtraFields as $key=>$extraField )
-	{
+	foreach( (array) $itemExtraFields as $key=>$extraField ) {
 	
 		if( !isset( $extraField->value) || !isset( $extraField->id) || empty($extraFields) )
 			continue;
@@ -81,7 +78,7 @@ if ($itemExtraFields) {
 
 $feedItem->type 				= "htmlContent";
 $feedItem->description 			= "";
-$feedItem->name 				= wxTags::parse($v->title);
+$feedItem->name 				= wxTags::parse( $v->title );
 $feedItem->datetime["published"] = $v->created;
 $feedItem->datetime["modified"] = $v->modified;
 $feedItem->image["mobile"] 		= $v->image;
@@ -90,14 +87,12 @@ $feedItem->uuid					= base64_encode( $document->getCfg('sitename') ) . "-k2-" . 
 $feedItem->url 					= JURI::root()."index.php?option=com_k2&view=item&id=".$v->id;
 $feedItem->author 				= @$v->author->name; // check to see if this exists someday
 $feedItem->publisher 			= $document->getCfg('sitename');
-$feedItem->url 					= str_replace("?template=weever_cartographer","",$feedItem->url);
-$feedItem->url 					= str_replace("&template=weever_cartographer","",$feedItem->url);
+$feedItem->url 					= str_replace( "?template=weever_cartographer", "", $feedItem->url );
+$feedItem->url 					= str_replace( "&template=weever_cartographer", "", $feedItem->url );
 
-if(count(@$v->tags))
-{
+if( count(@$v->tags) ) {
 
-	foreach ($v->tags as $key=>$tag)
-	{
+	foreach ($v->tags as $key=>$tag) {
 	
 		$feedItem->tags[$key]["name"] = $tag->name;
 		$feedItem->tags[$key]["link"] = JURI::root().$tag->link;
@@ -106,9 +101,9 @@ if(count(@$v->tags))
 
 }
 
-if(JRequest::getVar("geotag") == "true") {
+if( (bool) JRequest::getVar("geotag") ) {
 	
-	$feedItem->geo = $geoArray[$k];
+	$feedItem->geo = isset( $geoArray[$v->id] ) ? $geoArray[$v->id] : null;
 
 }
 

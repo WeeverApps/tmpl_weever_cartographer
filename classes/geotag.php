@@ -43,14 +43,14 @@ class wxGeotag {
 		if( JRequest::getVar("latitude") && JRequest::getVar("longitude") )
 		{
 		
-			$latitude = JRequest::getVar("latitude");
-			$longitude = JRequest::getVar("longitude");
+			$latitude 	= JRequest::getVar("latitude");
+			$longitude 	= JRequest::getVar("longitude");
 		
 			$order 		= " ORDER BY distance ";
 			$distance 	= ", glength( linestringfromwkb( linestring( 
 								GeomFromText('POINT(".$latitude." ".$longitude.")'), 
 								location ) ) ) as 'distance', 'rad' as 'distanceUnit' ";
-			$gps = true;
+			$gps 		= true;
 			
 		}
 		
@@ -62,12 +62,12 @@ class wxGeotag {
 				$order;
 
 		$db->setQuery($query);
-		$results = $db->loadObjectList();
+
+		$results 	= $db->loadObjectList();
 		
-		foreach( (array) $results as $k=>$v ) 
-		{
+		foreach( (array) $results as $k=>$v ) {
 			
-			self::convertToLatLong($v);
+			self::convertToLatLong( $v );
 			
 			// make geo markers unique when sorting by distance
 			
@@ -79,8 +79,7 @@ class wxGeotag {
 		}
 		
 		
-		if($gps == true)
-		{
+		if($gps == true) {
 		
 			$contentItems = $items;
 			$items = array();
@@ -89,8 +88,7 @@ class wxGeotag {
 			// rebuild $items to sort by marker distance, using geo markers as unique IDs now 
 			// (multiple results of same $item will now be possible)
 			
-			foreach( (array) $geoArrayUnique as $k=>$v )
-			{
+			foreach( (array) $geoArrayUnique as $k=>$v ) {
 				
 				$i++;
 				
@@ -103,7 +101,7 @@ class wxGeotag {
 			}
 			
 		}
-		
+
 		foreach( (array) $geoArray as $k=>$v ) {
 		
 			if( $v->marker[0] == "\\" || $v->marker[0] == "/" )

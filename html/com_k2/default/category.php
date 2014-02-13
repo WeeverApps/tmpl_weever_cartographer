@@ -112,7 +112,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
         if( (JRequest::getVar("latitude") && JRequest::getVar("longitude")) )
     	   $gps 	= true;
 
-    	$items 	= wxGeotag::getGeoData($items, "com_k2", $gps, $geoArray);
+    	$items 	= wxGeotag::getGeoData( $items, "com_k2", $gps, $geoArray );
     	
     }
     
@@ -137,8 +137,8 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
 	
 	$i = 0;
 	        
-	foreach( (array) $items as $k=>$v )
-    {
+	foreach( (array) $items as $k=>$v ) {
+        
     	$i++;
     	
     	if( JRequest::getVar("latitude") && $i > 25 && !JRequest::getVar("nolimit") )
