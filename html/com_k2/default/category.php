@@ -108,6 +108,7 @@ require_once(JPATH_THEMES . DS . 'weever_cartographer' . DS . 'classes' . DS . '
     if( (bool) JRequest::getVar("geotag") ) {
     
         JRequest::setVar('limit', 150);
+        $items      = $model->getData($ordering);
 
         if( (JRequest::getVar("latitude") && JRequest::getVar("longitude")) )
     	   $gps = true;
