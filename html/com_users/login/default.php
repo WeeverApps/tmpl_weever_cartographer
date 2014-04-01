@@ -59,10 +59,9 @@ defined('_JEXEC') or die();
 		    
 		}
 		
-		$json			= json_encode($output);
+		$json = json_encode($output);
 		
-		echo $json;
-		
+		print_r($json);
 		jexit();
 	
 	}
@@ -78,8 +77,10 @@ defined('_JEXEC') or die();
 		
 		$json			= json_encode($json);
 		
-		echo $callback . "(" . $json . ");";
+		if($callback)
+			$json = $callback . "(". $json .")";
 		
+		print_r($json);
 		jexit();
 	
 	}
@@ -94,6 +95,8 @@ defined('_JEXEC') or die();
 	
 	$json			= json_encode($json);
 	
-	echo $callback . "(" . $json . ");";
+	if($callback)
+		$json = $callback . "(". $json .")";
 	
+	print_r($json);
 	jexit();
