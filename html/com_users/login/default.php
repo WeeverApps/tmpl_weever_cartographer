@@ -35,12 +35,13 @@ defined('_JEXEC') or die();
 	{
 	
 		//$output->data->username		= $user->username;
+		$output->data->user_id			= $user->id;
 		$output->data->display_name		= $user->name;
 		//$output->data->name			= $user->name;
 		$output->data->user_email		= $user->email;
 		$output->data->user_login		= $user->username;
 		$output->data->user_registered	= $user->registerDate;
-		$output->roles				= array();
+		$output->roles					= array();
 		
 		
 		foreach ($user->groups as $groupId => $value){
